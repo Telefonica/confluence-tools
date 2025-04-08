@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@mocks-server/logger": "2.0.0-beta.2",
-    "axios": "1.6.7",
+    "axios": "1.8.2",
     "confluence.js": "1.7.4",
     "fastq": "1.17.1"
   },
