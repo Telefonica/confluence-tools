@@ -1,4 +1,4 @@
-[![Build status][https://github.com/Telefonica/confluence-tools/workflows/build/badge.svg?branch=main]][https://github.com/Telefonica/confluence-tools/actions?query=workflow%3Abuild+branch%3Amain] [![Last commit][https://img.shields.io/github/last-commit/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/commits] [![Last release][https://img.shields.io/github/release-date/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/releases]
+[![Build status](https://github.com/Telefonica/confluence-tools/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Telefonica/confluence-tools/actions?query=workflow%3Abuild+branch%3Amain) [![Last commit](https://img.shields.io/github/last-commit/Telefonica/confluence-tools.svg)](https://github.com/Telefonica/confluence-tools/commits) [![Last release](https://img.shields.io/github/release-date/Telefonica/confluence-tools.svg)](https://github.com/Telefonica/confluence-tools/releases)
 
 # Confluence tools
 

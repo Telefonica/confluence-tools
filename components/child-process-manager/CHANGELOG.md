@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## [2.0.1] - 2025-04-08
+
+### Fixed
+
+* fix: Fix badges in README file
+
 ## [2.0.0] - 2025-04-08
 
 ### Changed
