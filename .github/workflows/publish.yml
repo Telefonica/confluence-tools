@@ -5,9 +5,6 @@ name: Publish to NPM
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - chore/publish
 jobs:
   publish:
     runs-on: ubuntu-latest
