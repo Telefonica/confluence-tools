@@ -14,3 +14,5 @@ jobs:
       - uses: ./.github/actions/install
       - run: pnpm nx run-many -t check:all --all
       - run: pnpm -r publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
