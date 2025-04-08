@@ -4,7 +4,7 @@
 import { dirname, resolve } from "node:path";
 
 import type { LoggerInterface } from "@mocks-server/logger";
-import type { ConfluenceInputPage } from "@tid-xcut/confluence-sync";
+import type { ConfluenceInputPage } from "@telefonica/confluence-sync";
 import type { TemplateDelegate } from "handlebars";
 import Handlebars from "handlebars";
 import rehypeRaw from "rehype-raw";

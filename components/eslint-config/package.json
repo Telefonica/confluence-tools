@@ -1,5 +1,5 @@
 {
-  "name": "@tid-xcut/eslint-config",
+  "name": "@telefonica/eslint-config",
   "version": "0.1.0",
   "private": true,
   "type": "module",

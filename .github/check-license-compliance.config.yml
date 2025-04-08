@@ -41,7 +41,11 @@ licenses:
 npm:
   excludeModules:
     # The following packages are references to local packages
-    - nameMatch: "@tid-xcut\/.*"
+    - nameMatch: "@telefonica\/confluence-sync"
+      ignore: true
+    - nameMatch: "@telefonica\/child-process-manager"
+      ignore: true
+    - nameMatch: "@telefonica\/markdown-confluence-sync"
       ignore: true
     # The following packages have a license that is not a valid SPDX identifier
     - "babel-plugin-transform-import-meta@2.2.1" # BSD

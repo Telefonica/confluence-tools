@@ -1,3 +1,7 @@
+[![Build status][https://github.com/Telefonica/confluence-tools/workflows/build/badge.svg?branch=main]][https://github.com/Telefonica/confluence-tools/actions?query=workflow%3Abuild+branch%3Amain] [![Last commit][https://img.shields.io/github/last-commit/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/commits] [![Last release][https://img.shields.io/github/release-date/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/releases]
+
+[![NPM downloads][https://img.shields.io/npm/@telefonica/child-process-manager.svg]][https://www.npmjs.com/package/@telefonica/child-process-manager] [![License][https://img.shields.io/npm/l/@telefonica/child-process-manager.svg]][https://github.com/Telefonica/confluence-tools/blob/main/components/child-process-manager/LICENSE]
+
 # child-process-manager
 
 Async child process manager providing access to exit code and stdout/stderr logs.
@@ -23,12 +27,10 @@ It is useful to execute shell commands from tests and check their output, for ex
 
 ## Installation
 
-First of all, you need to __get permissions to install the package__. Please follow the instructions in the [Confluence page about NPM packages](https://confluence.tid.es/display/CTO/%5BCross%5D+NPM+Packages).
-
-Then, you can install the package using npm:
+Install the package using npm:
 
 ```bash
-npm install @tid-xcut/child-process-manager
+npm install @telefonica/child-process-manager
 ```
 
 ## Example
@@ -36,7 +38,7 @@ npm install @tid-xcut/child-process-manager
 Import the library, create a child process and wait for it to finish. It will return the exit code and the array of logs in the resolved object.
 
 ```js title="Example"
-import { ChildProcessManager } from '@tid-xcut/child-process-manager';
+import { ChildProcessManager } from '@telefonica/child-process-manager';
 
 const childProcess = new ChildProcessManager(["echo", 'Hello world!']);
 

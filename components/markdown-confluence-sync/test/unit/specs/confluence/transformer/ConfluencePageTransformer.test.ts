@@ -3,7 +3,7 @@
 
 import { join, resolve } from "path";
 
-import type { ConfluenceInputPage } from "@tid-xcut/confluence-sync";
+import type { ConfluenceInputPage } from "@telefonica/confluence-sync";
 import { glob } from "glob";
 import rehypeStringify from "rehype-stringify/lib";
 import { remark } from "remark";

@@ -159,7 +159,7 @@ importers:
       '@mocks-server/logger':
         specifier: 2.0.0-beta.2
         version: 2.0.0-beta.2
-      '@tid-xcut/confluence-sync':
+      '@telefonica/confluence-sync':
         specifier: workspace:*
         version: link:../confluence-sync
       fs-extra:
@@ -277,7 +277,7 @@ importers:
       '@mocks-server/main':
         specifier: 5.0.0-beta.4
         version: 5.0.0-beta.4
-      '@tid-xcut/child-process-manager':
+      '@telefonica/child-process-manager':
         specifier: workspace:*
         version: link:../child-process-manager
       '@types/fs-extra':

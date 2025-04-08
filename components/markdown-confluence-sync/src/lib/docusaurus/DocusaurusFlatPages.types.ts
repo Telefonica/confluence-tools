@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { FilesPattern } from "../MarkdownConfluenceSync.types";
-import { SyncModes } from "@tid-xcut/confluence-sync";
+import { SyncModes } from "@telefonica/confluence-sync";
 
 import type {
   MarkdownDocumentsInterface,

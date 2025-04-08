@@ -6,7 +6,7 @@ import { resolve } from "path";
 import { Config } from "@mocks-server/config";
 import type { LoggerInterface } from "@mocks-server/logger";
 import { Logger } from "@mocks-server/logger";
-import { SyncModes } from "@tid-xcut/confluence-sync";
+import { SyncModes } from "@telefonica/confluence-sync";
 
 import { ConfluenceSync } from "./confluence/ConfluenceSync.js";
 import type {

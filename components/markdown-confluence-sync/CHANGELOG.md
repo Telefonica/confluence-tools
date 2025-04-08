@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## [2.0.0] - 2025-04-08
+
+### Changed
+
+* chore: Publish to npm. Rename package to `@telefonica/markdown-confluence-sync`.
+
 ## [1.2.1] - 2025-03-20
 
 ### Fixed
