@@ -3,7 +3,7 @@
 
 import type { ConfigInterface } from "@mocks-server/config";
 import type { LoggerInterface } from "@mocks-server/logger";
-import type { SyncModes } from "@tid-xcut/confluence-sync";
+import type { SyncModes } from "@telefonica/confluence-sync";
 
 import type { ContentPreprocessor, FilesMetadata, FilesPattern } from "..";
 

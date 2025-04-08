@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { LoggerInterface } from "@mocks-server/logger";
-import type { ConfluenceInputPage } from "@tid-xcut/confluence-sync";
+import type { ConfluenceInputPage } from "@telefonica/confluence-sync";
 
 import type { ConfluenceSyncPage } from "../ConfluenceSync.types.js";
 

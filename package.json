@@ -1,9 +1,9 @@
 {
-  "name": "cross-confluence-tools",
+  "name": "@telefonica/confluence-tools",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Cross-Cutting team Confluence",
+  "description": "Confluence tools for markdown and confluence integration",
   "packageManager": "pnpm@9.4.0",
   "scripts": {
     "nx": "nx",

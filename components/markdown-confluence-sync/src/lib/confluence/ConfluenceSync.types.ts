@@ -7,7 +7,7 @@ import type {
   OptionDefinition,
 } from "@mocks-server/config";
 import type { LoggerInterface } from "@mocks-server/logger";
-import type { ConfluenceInputPage } from "@tid-xcut/confluence-sync";
+import type { ConfluenceInputPage } from "@telefonica/confluence-sync";
 
 import type { ModeOption } from "../MarkdownConfluenceSync.types";
 

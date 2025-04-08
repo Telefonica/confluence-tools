@@ -1,3 +1,7 @@
+[![Build status][https://github.com/Telefonica/confluence-tools/workflows/build/badge.svg?branch=main]][https://github.com/Telefonica/confluence-tools/actions?query=workflow%3Abuild+branch%3Amain] [![Last commit][https://img.shields.io/github/last-commit/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/commits] [![Last release][https://img.shields.io/github/release-date/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/releases]
+
+[![NPM downloads][https://img.shields.io/npm/@telefonica/confluence-sync.svg]][https://www.npmjs.com/package/@telefonica/confluence-sync] [![License][https://img.shields.io/npm/l/@telefonica/confluence-sync.svg]][https://github.com/Telefonica/confluence-tools/blob/main/components/confluence-sync/LICENSE]
+
 # confluence-sync
 
 Creates/updates/deletes Confluence pages based on a list of objects containing the page contents. Supports nested pages and attachments upload.
@@ -50,12 +54,10 @@ This library requires:
 
 ## Installation
 
-First of all, you need to __get permissions to install the package__. Please follow the instructions in the [Confluence page about NPM packages](https://confluence.tid.es/display/CTO/%5BCross%5D+NPM+Packages).
-
-Then, you can install the package using npm:
+Install the package using npm:
 
 ```bash
-npm install @tid-xcut/confluence-sync
+npm install @telefonica/confluence-sync
 ```
 
 ## Example
@@ -63,7 +65,7 @@ npm install @tid-xcut/confluence-sync
 Import it and pass to it a list of pages to sync:
 
 ```js title="Example"
-import { ConfluenceSyncPages } from '@tid-xcut/confluence-sync';
+import { ConfluenceSyncPages } from '@telefonica/confluence-sync';
 
 const confluenceSyncPages = new ConfluenceSyncPages({
   url: "https://your.confluence.com",
@@ -144,7 +146,7 @@ To get a page ID in Confluence, you can use the [Confluence REST API](https://de
 * Enter to Confluence.
 * Go to the page of the space where you want to create the pages. 
 * Click on the `...` button and select `Page information`.
-* Copy the ID of the page from the URL. For example, if the URL is `https://confluence.tid.es/pages/viewpage.action?pageId=12345678`, the ID of the page is `12345678`. 
+* Copy the ID of the page from the URL. For example, if the URL is `https://confluence.foo.es/pages/viewpage.action?pageId=12345678`, the ID of the page is `12345678`. 
 
 ## Sync modes in detail
 
@@ -186,7 +188,7 @@ Use the "id" mode if you want to update only specific pages directly by providin
 Note that __the pages to update must exist in Confluence before running the sync process__.
 
 ```js title="Example using the id mode"
-import { ConfluenceSyncPages, SyncModes } from '@tid-xcut/confluence-sync';
+import { ConfluenceSyncPages, SyncModes } from '@telefonica/confluence-sync';
 
 const confluenceSyncPages = new ConfluenceSyncPages({
   url: "https://my.confluence.es",

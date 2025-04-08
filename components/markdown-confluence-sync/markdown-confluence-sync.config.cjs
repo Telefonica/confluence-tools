@@ -4,10 +4,11 @@ if (
   !process.env.CONFLUENCE_URL ||
   !process.env.CONFLUENCE_PAT ||
   !process.env.CONFLUENCE_SPACE_KEY ||
-  !process.env.CONFLUENCE_ROOT_PAGE_ID
+  !process.env.CONFLUENCE_ROOT_PAGE_ID ||
+  !process.env.CONFLUENCE_README_ID
 ) {
   throw new Error(
-    "Please provide all required environment variables: CONFLUENCE_URL, CONFLUENCE_PAT, CONFLUENCE_SPACE_KEY, CONFLUENCE_ROOT_PAGE_ID",
+    "Please provide all required environment variables: CONFLUENCE_URL, CONFLUENCE_PAT, CONFLUENCE_SPACE_KEY, CONFLUENCE_ROOT_PAGE_ID, CONFLUENCE_README_ID",
   );
 }
 
@@ -19,7 +20,7 @@ module.exports = {
     {
       path: "README.md",
       title: "[Markdown Confluence Sync] TypeScript",
-      id: "337906335",
+      id: process.env.CONFLUENCE_README_ID,
       sync: true,
     },
     {

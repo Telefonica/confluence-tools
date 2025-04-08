@@ -23,7 +23,7 @@ import type {
   MarkdownDocumentsInterface,
 } from "./DocusaurusPages.types.js";
 import { MarkdownDocFactory } from "./pages/DocusaurusDocPageFactory.js";
-import { SyncModes } from "@tid-xcut/confluence-sync";
+import { SyncModes } from "@telefonica/confluence-sync";
 
 export const MarkdownFlatDocuments: MarkdownFlatDocumentsConstructor = class MarkdownFlatDocuments
   implements MarkdownDocumentsInterface

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2025 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ChildProcessManagerInterface } from "@tid-xcut/child-process-manager";
-import { ChildProcessManager } from "@tid-xcut/child-process-manager";
+import type { ChildProcessManagerInterface } from "@telefonica/child-process-manager";
+import { ChildProcessManager } from "@telefonica/child-process-manager";
 
 import {
   changeMockCollection,

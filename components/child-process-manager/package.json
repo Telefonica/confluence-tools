@@ -1,15 +1,15 @@
 {
-  "name": "@tid-xcut/child-process-manager",
+  "name": "@telefonica/child-process-manager",
   "description": "Async child process manager providing access to exit code and stdout/stderr",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "author": "Telefónica Innovación Digital",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Telefonica/cross-confluence-tools",
+    "url": "https://github.com/Telefonica/confluence-tools",
     "directory": "components/child-process-manager"
   },
-  "homepage": "https://github.com/Telefonica/cross-confluence-tools/tree/main/components/child-process-manager",
+  "homepage": "https://github.com/Telefonica/confluence-tools/tree/main/components/child-process-manager",
   "publishConfig": {
     "access": "public"
   },
