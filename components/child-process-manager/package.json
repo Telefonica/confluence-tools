@@ -1,7 +1,7 @@
 {
   "name": "@telefonica/child-process-manager",
   "description": "Async child process manager providing access to exit code and stdout/stderr",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "Apache-2.0",
   "author": "Telefónica Innovación Digital",
   "repository": {
