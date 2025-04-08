@@ -11,6 +11,7 @@
   },
   "homepage": "https://github.com/Telefonica/confluence-tools/tree/main/components/child-process-manager",
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "keywords": [
