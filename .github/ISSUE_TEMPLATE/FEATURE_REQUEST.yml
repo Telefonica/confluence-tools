@@ -12,10 +12,10 @@ body:
     attributes:
       value: >
         **Thanks :heart: for taking the time to fill out this feature request report!** We kindly ask that you search to
-        see if an issue [already exists](https://github.com/Telefonica/cross-confluence-tools/issues?q=is%3Aissue+sort%3Acreated-desc+) for
+        see if an issue [already exists](https://github.com/Telefonica/confluence-tools/issues?q=is%3Aissue+sort%3Acreated-desc+) for
         your feature.
 
-        We are also happy to accept contributions from our users. For more details read our [contributing guidelines](https://github.com/Telefonica/cross-confluence-tools/blob/main/.github/CONTRIBUTING.md).
+        We are also happy to accept contributions from our users. For more details read our [contributing guidelines](https://github.com/Telefonica/confluence-tools/blob/main/.github/CONTRIBUTING.md).
   - type: dropdown
     id: package
     attributes:
@@ -51,7 +51,7 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/Telefonica/cross-confluence-tools/blob/main/.github/CODE_OF_CONDUCT.md). 
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/Telefonica/confluence-tools/blob/main/.github/CODE_OF_CONDUCT.md). 
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true

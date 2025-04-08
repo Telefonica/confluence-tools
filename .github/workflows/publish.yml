@@ -12,11 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/install
-      - uses: DamianReeves/write-file-action@v1.3
-        with:
-          path: .npmrc
-          contents: |
-            //nexus.tid.es/repository/npm-xcut-components/:_auth=${{ secrets.NPM_TOKEN }}
-          write-mode: append
       - run: pnpm nx run-many -t check:all --all
       - run: pnpm -r publish --no-git-checks

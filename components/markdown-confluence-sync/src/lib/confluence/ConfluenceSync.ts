@@ -5,8 +5,8 @@ import type { LoggerInterface } from "@mocks-server/logger";
 import type {
   ConfluenceInputPage,
   ConfluenceSyncPagesInterface,
-} from "@tid-xcut/confluence-sync";
-import { ConfluenceSyncPages, SyncModes } from "@tid-xcut/confluence-sync";
+} from "@telefonica/confluence-sync";
+import { ConfluenceSyncPages, SyncModes } from "@telefonica/confluence-sync";
 
 import type { ModeOption } from "../MarkdownConfluenceSync.types.js";
 import { isStringWithLength } from "../support/typesValidations.js";

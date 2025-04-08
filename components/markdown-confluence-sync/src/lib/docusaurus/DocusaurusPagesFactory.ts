@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
-import { SyncModes } from "@tid-xcut/confluence-sync";
+import { SyncModes } from "@telefonica/confluence-sync";
 
 import { MarkdownFlatDocuments } from "./DocusaurusFlatPages.js";
 import type { MarkdownDocumentsInterface } from "./DocusaurusPages.types.js";

@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
-jest.mock("@tid-xcut/confluence-sync");
+jest.mock("@telefonica/confluence-sync");
 
-import * as confluenceSyncPagesMock from "@tid-xcut/confluence-sync";
+import * as confluenceSyncPagesMock from "@telefonica/confluence-sync";
 
 export const customConfluenceSyncPages = {
   sync: jest.fn(),

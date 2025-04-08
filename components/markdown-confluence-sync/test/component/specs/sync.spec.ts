@@ -4,8 +4,8 @@
 import { rm } from "fs/promises";
 import { resolve } from "path";
 
-import type { ChildProcessManagerInterface } from "@tid-xcut/child-process-manager";
-import { ChildProcessManager } from "@tid-xcut/child-process-manager";
+import type { ChildProcessManagerInterface } from "@telefonica/child-process-manager";
+import { ChildProcessManager } from "@telefonica/child-process-manager";
 import { glob } from "glob";
 import { dedent } from "ts-dedent";
 

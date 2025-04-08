@@ -28,10 +28,11 @@ jobs:
       - name: Sync Markdown Confluence Sync Docs to Confluence
         run: pnpm nx sync:docs markdown-confluence-sync
         env:
-          CONFLUENCE_URL: ${{ vars.CONFLUENCE_URL }}
+          CONFLUENCE_URL: ${{ secrets.CONFLUENCE_URL }}
           CONFLUENCE_PAT: ${{ secrets.CONFLUENCE_PAT }}
-          CONFLUENCE_ROOT_PAGE_ID: ${{ vars.CONFLUENCE_MARKDOWN_CONFLUENCE_SYNC_ROOT_PAGE_ID }}
-          CONFLUENCE_SPACE_KEY: ${{ vars.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_ROOT_PAGE_ID: ${{ secrets.CONFLUENCE_MARKDOWN_CONFLUENCE_SYNC_ROOT_PAGE_ID }}
+          CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_README_ID: ${{ secrets.CONFLUENCE_README_ID }}
 
   markdown-confluence-sync-test-e2e:
     environment: production
@@ -49,7 +50,8 @@ jobs:
       - name: Run E2E Tests
         run: pnpm nx test:e2e markdown-confluence-sync
         env:
-          CONFLUENCE_URL: ${{ vars.CONFLUENCE_URL }}
+          CONFLUENCE_URL: ${{ secrets.CONFLUENCE_URL }}
           CONFLUENCE_PAT: ${{ secrets.CONFLUENCE_PAT }}
-          CONFLUENCE_ROOT_PAGE_ID: ${{ vars.CONFLUENCE_MARKDOWN_CONFLUENCE_SYNC_ROOT_PAGE_ID }}
-          CONFLUENCE_SPACE_KEY: ${{ vars.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_ROOT_PAGE_ID: ${{ secrets.CONFLUENCE_MARKDOWN_CONFLUENCE_SYNC_ROOT_PAGE_ID }}
+          CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+          CONFLUENCE_README_ID: ${{ secrets.CONFLUENCE_README_ID }}

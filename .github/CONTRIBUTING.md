@@ -27,9 +27,6 @@ Every component has to be created in the `components` folder. Each one must cont
 
 To get started, clone the repository and install the dependencies:
 
-> [!WARNING]
-> Some repository components may depend on packages published in the xcut npm registry. Please login to the registry before installing the dependencies following the instructions in the [Cross NPM Confluence page](https://confluence.tid.es/display/CTO/%5BCross%5D+NPM+Packages).
-
 ```bash
 pnpm install
 ```

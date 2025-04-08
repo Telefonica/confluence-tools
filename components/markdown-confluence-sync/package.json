@@ -1,15 +1,15 @@
 {
-  "name": "@tid-xcut/markdown-confluence-sync",
+  "name": "@telefonica/markdown-confluence-sync",
   "description": "Creates/updates/deletes Confluence pages based on markdown files in a directory. Supports Mermaid diagrams and per-page configuration using frontmatter metadata. Works great with Docusaurus",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "author": "Telefónica Innovación Digital",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Telefonica/cross-confluence-tools",
+    "url": "https://github.com/Telefonica/confluence-tools",
     "directory": "components/markdown-confluence-sync"
   },
-  "homepage": "https://github.com/Telefonica/cross-confluence-tools/tree/main/components/markdown-confluence-sync",
+  "homepage": "https://github.com/Telefonica/confluence-tools/tree/main/components/markdown-confluence-sync",
   "publishConfig": {
     "access": "public"
   },
@@ -73,7 +73,7 @@
     "@mermaid-js/mermaid-cli": "11.4.0",
     "@mocks-server/config": "2.0.0-beta.3",
     "@mocks-server/logger": "2.0.0-beta.2",
-    "@tid-xcut/confluence-sync": "workspace:*",
+    "@telefonica/confluence-sync": "workspace:*",
     "fs-extra": "11.2.0",
     "glob": "10.3.10",
     "globule": "1.3.4",
@@ -114,7 +114,7 @@
     "@mocks-server/admin-api-client": "8.0.0-beta.2",
     "@mocks-server/core": "5.0.0-beta.3",
     "@mocks-server/main": "5.0.0-beta.4",
-    "@tid-xcut/child-process-manager": "workspace:*",
+    "@telefonica/child-process-manager": "workspace:*",
     "@types/fs-extra": "11.0.4",
     "@types/glob": "8.1.0",
     "@types/globule": "1.1.9",

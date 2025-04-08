@@ -1,3 +1,7 @@
+[![Build status][https://github.com/Telefonica/confluence-tools/workflows/build/badge.svg?branch=main]][https://github.com/Telefonica/confluence-tools/actions?query=workflow%3Abuild+branch%3Amain] [![Last commit][https://img.shields.io/github/last-commit/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/commits] [![Last release][https://img.shields.io/github/release-date/Telefonica/confluence-tools.svg]][https://github.com/Telefonica/confluence-tools/releases]
+
+[![NPM downloads][https://img.shields.io/npm/@telefonica/markdown-confluence-sync.svg]][https://www.npmjs.com/package/@telefonica/markdown-confluence-sync] [![License][https://img.shields.io/npm/l/@telefonica/markdown-confluence-sync.svg]][https://github.com/Telefonica/confluence-tools/blob/main/components/markdown-confluence-sync/LICENSE]
+
 # markdown-confluence-sync
 
 Updates/creates [Confluence](https://www.atlassian.com/es/software/confluence) pages based on markdown files content.
@@ -103,12 +107,10 @@ Other features are:
 
 ### Installation
 
-First of all, you need to __get permissions to install the package__. Please follow the instructions in the [Confluence page about NPM packages](https://confluence.tid.es/display/CTO/%5BCross%5D+NPM+Packages).
-
-Then, you can install the package using npm:
+Install the package using npm:
 
 ```bash
-npm install @tid-xcut/markdown-confluence-sync
+npm install @telefonica/markdown-confluence-sync
 ```
 
 ### Usage
@@ -231,7 +233,7 @@ repository/
 ```
 
 > [!TIP]
-> You can also read the [Confluence Sync package documentation](https://github.com/Telefonica/cross-confluence-tools/tree/main/components/confluence-sync) for further info about the process of syncing to Confluence.
+> You can also read the [Confluence Sync package documentation](https://github.com/Telefonica/confluence-tools/tree/main/components/confluence-sync) for further info about the process of syncing to Confluence.
 
 ### Flat mode
 
@@ -373,7 +375,7 @@ It must be an array of objects, and each one must have the `path` property with 
 * `sync` - Boolean to indicate if the file should be synced with Confluence. If set to `false`, the file will be ignored.
 
 ```js
-/** @type {import('@tid-xcut/markdown-confluence-sync').Configuration} */
+/** @type {import('@telefonica/markdown-confluence-sync').Configuration} */
 module.exports = {
   docsDir: "./docs",
   filesMetadata: [
@@ -411,7 +413,7 @@ You can also use the `confluence.noticeTemplate` option to provide a custom temp
   * `{{default}}`: The default message.
 
 ```js
-/** @type {import('@tid-xcut/markdown-confluence-sync').Configuration} */
+/** @type {import('@telefonica/markdown-confluence-sync').Configuration} */
 
 module.exports = {
   docsDir: "./docs",
@@ -504,7 +506,7 @@ You can also import the library in your code and use it programmatically. In thi
 
 ```js title="Programmatic usage"
 import path from "path";
-import { MarkdownConfluenceSync } from '@tid-xcut/markdown-confluence-sync';
+import { MarkdownConfluenceSync } from '@telefonica/markdown-confluence-sync';
 
 const markdownConfluenceSync = new MarkdownConfluenceSync({
   docsDir: path.resolve(__dirname, "..", "docs");

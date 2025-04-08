@@ -8,7 +8,7 @@ import type {
 import { Config } from "@mocks-server/config";
 import type { LoggerInterface } from "@mocks-server/logger";
 import { Logger } from "@mocks-server/logger";
-import type { SyncModes } from "@tid-xcut/confluence-sync";
+import type { SyncModes } from "@telefonica/confluence-sync";
 
 import { MarkdownDocumentsFactory } from "@src/lib/docusaurus/DocusaurusPagesFactory";
 import type { MarkdownDocumentsFactoryOptions } from "@src/lib/docusaurus/DocusaurusPagesFactory.types";
