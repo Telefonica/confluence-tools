@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Confluence tools for markdown and confluence integration",
-  "packageManager": "pnpm@10.8.0",
+  "packageManager": "pnpm@8.15.9",
   "scripts": {
     "nx": "nx",
     "eslint": "eslint",
