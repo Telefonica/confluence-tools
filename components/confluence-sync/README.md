@@ -1,7 +1,6 @@
 [![Build status](https://github.com/Telefonica/confluence-tools/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Telefonica/confluence-tools/actions?query=workflow%3Abuild+branch%3Amain) [![Last commit](https://img.shields.io/github/last-commit/Telefonica/confluence-tools.svg)](https://github.com/Telefonica/confluence-tools/commits) [![Last release](https://img.shields.io/github/release-date/Telefonica/confluence-tools.svg)](https://github.com/Telefonica/confluence-tools/releases)
 
-[![NPM downloads](https://img.shields.io/npm/dm/@telefonica/concluence-sync.svg)](https://www.npmjs.com/package/@telefonica/concluence-sync) [![License](https://img.shields.io/npm/l/@telefonica/concluence-sync.svg)](https://github.com/Telefonica/confluence-tools/blob/main/components/concluence-sync/LICENSE)
-
+[![NPM downloads](https://img.shields.io/npm/dm/@telefonica/confluence-sync.svg)](https://www.npmjs.com/package/@telefonica/confluence-sync) [![License](https://img.shields.io/npm/l/@telefonica/confluence-sync.svg)](https://github.com/Telefonica/confluence-tools/blob/main/components/confluence-sync/LICENSE)
 # confluence-sync
 
 Creates/updates/deletes Confluence pages based on a list of objects containing the page contents. Supports nested pages and attachments upload.
