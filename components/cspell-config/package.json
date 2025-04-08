@@ -1,5 +1,5 @@
 {
-  "name": "@local/cspell-config",
+  "name": "@telefonica/cspell-config",
   "version": "0.1.0",
   "private": true,
   "type": "commonjs",
