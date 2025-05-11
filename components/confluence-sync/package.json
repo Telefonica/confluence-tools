@@ -61,15 +61,15 @@
     "@mocks-server/logger": "2.0.0-beta.2",
     "axios": "1.6.7",
     "confluence.js": "1.7.4",
-    "fastq": "1.17.1"
+    "fastq": "1.19.1"
   },
   "devDependencies": {
     "@mocks-server/admin-api-client": "8.0.0-beta.2",
     "@mocks-server/core": "5.0.0-beta.3",
     "@mocks-server/main": "5.0.0-beta.4",
     "@types/tmp": "0.2.6",
-    "cross-fetch": "4.0.0",
-    "start-server-and-test": "2.0.8",
+    "cross-fetch": "4.1.0",
+    "start-server-and-test": "2.0.11",
     "tmp": "0.2.3"
   },
   "files": [
