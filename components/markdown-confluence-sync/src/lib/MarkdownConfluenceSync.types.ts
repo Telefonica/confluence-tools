@@ -113,7 +113,10 @@ export type MainDryRunOptionDefinition = OptionDefinition<
   { hasDefault: true }
 >;
 
-export type MainDryRunOption = OptionInterfaceOfType<boolean, { hasDefault: true }>;
+export type MainDryRunOption = OptionInterfaceOfType<
+  boolean,
+  { hasDefault: true }
+>;
 
 /** Creates a MarkdownConfluenceSync interface */
 export interface MarkdownConfluenceSyncConstructor {
