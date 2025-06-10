@@ -27,6 +27,8 @@ export type FilesMetadata = FileMetadata[];
 
 export type ContentPreprocessor = (content: string, path: string) => string;
 
+export type DryRun = boolean;
+
 declare global {
   //eslint-disable-next-line @typescript-eslint/no-namespace
   namespace MarkdownConfluenceSync {
@@ -61,6 +63,9 @@ declare global {
 
       /** Hook enabling to modify the content of files before processing them */
       preprocessor?: ContentPreprocessor;
+
+      /** Process markdown files without sending them to confluence-sync */
+      dryRun?: DryRun;
     }
   }
 }
@@ -102,6 +107,13 @@ export type ContentPreprocessorOptionDefinition =
 
 export type ContentPreprocessorOption =
   OptionInterfaceOfType<ContentPreprocessor>;
+
+export type MainDryRunOptionDefinition = OptionDefinition<
+  boolean,
+  { hasDefault: true }
+>;
+
+export type MainDryRunOption = OptionInterfaceOfType<boolean, { hasDefault: true }>;
 
 /** Creates a MarkdownConfluenceSync interface */
 export interface MarkdownConfluenceSyncConstructor {

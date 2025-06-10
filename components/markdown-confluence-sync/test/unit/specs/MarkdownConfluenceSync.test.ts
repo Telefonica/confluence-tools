@@ -31,6 +31,20 @@ describe("markdownConfluenceSync", () => {
     );
   });
 
+  it("should not call to synchronize if dryRun is true", async () => {
+    // Arrange
+    const markdownConfluenceSync = new MarkdownConfluenceSync({
+      ...CONFIG,
+      dryRun: true,
+    });
+
+    // Act
+    await markdownConfluenceSync.sync();
+
+    // Assert
+    expect(customConfluenceSync.sync).not.toHaveBeenCalled();
+  });
+
   it("when called twice, it should send to synchronize the pages to confluence twice", async () => {
     // Arrange
     const markdownConfluenceSync = new MarkdownConfluenceSync(CONFIG);

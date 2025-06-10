@@ -34,6 +34,8 @@ import type {
   FilesMetadataOption,
   ContentPreprocessorOptionDefinition,
   ContentPreprocessorOption,
+  MainDryRunOptionDefinition,
+  MainDryRunOption,
 } from "./MarkdownConfluenceSync.types.js";
 
 const MODULE_NAME = "markdown-confluence-sync";
@@ -78,6 +80,13 @@ const contentPreprocessorOption: ContentPreprocessorOptionDefinition = {
   type: "unknown",
 };
 
+const dryRunOption: MainDryRunOptionDefinition = {
+  name: "dryRun",
+  type: "boolean",
+  default: false,
+  description: "Process markdown files without sending them to confluence-sync",
+};
+
 export const MarkdownConfluenceSync: MarkdownConfluenceSyncConstructor = class MarkdownConfluenceSync
   implements MarkdownConfluenceSyncInterface
 {
@@ -93,6 +102,7 @@ export const MarkdownConfluenceSync: MarkdownConfluenceSyncConstructor = class M
   private _filesMetadataOption: FilesMetadataOption;
   private _filesIgnoreOption: FilesIgnoreOption;
   private _contentPreprocessorOption: ContentPreprocessorOption;
+  private _dryRunOption: MainDryRunOption;
   private _cwd: string;
 
   constructor(config: Configuration) {
@@ -128,6 +138,10 @@ export const MarkdownConfluenceSync: MarkdownConfluenceSyncConstructor = class M
       contentPreprocessorOption as ContentPreprocessorOptionDefinition,
     ) as unknown as ContentPreprocessorOption;
 
+    this._dryRunOption = this._configuration.addOption(
+      dryRunOption as MainDryRunOptionDefinition,
+    );
+
     const markdownLogger = this._logger.namespace(MARKDOWN_NAMESPACE);
 
     const confluenceConfig =
@@ -154,9 +168,16 @@ export const MarkdownConfluenceSync: MarkdownConfluenceSyncConstructor = class M
   public async sync(): Promise<void> {
     await this._init();
     const pages = await this._markdownDocuments.read();
-    await this._confluenceSync.sync(
-      this._markdownPagesToConfluencePages(pages),
-    );
+    const convertedPages = this._markdownPagesToConfluencePages(pages);
+    const dryRun = this._dryRunOption.value;
+    if (dryRun) {
+      this._logger.info(
+        "Dry run mode is enabled. No changes will be made to Confluence.",
+      );
+      return;
+    }
+
+    await this._confluenceSync.sync(convertedPages);
   }
 
   private async _init() {

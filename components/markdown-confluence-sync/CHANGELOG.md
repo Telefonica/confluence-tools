@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## [2.1.0] - 2025-06-10
+
+### Added
+
+* feat: Add `dryRun` option, enabling to run the sync process without actually sending the content to Confluence. This is useful for testing the configuration and markdown files without making changes in Confluence.
+
 ## [2.0.1] - 2025-04-15
 
 ### Changed

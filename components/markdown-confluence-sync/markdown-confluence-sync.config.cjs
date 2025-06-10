@@ -16,6 +16,7 @@ module.exports = {
   mode: "flat",
   docsDir: ".",
   filesPattern: "*(README.md|CHANGELOG.md)",
+  dryRun: true, // TODO: Remove before merging to main. Just added to check if the config is working in CI.
   filesMetadata: [
     {
       path: "README.md",
