@@ -283,6 +283,7 @@ The namespace for the configuration of this library is `markdown-confluence-sync
 | `confluence.noticeMessage` | `string` | Notice message to add at the beginning of the Confluence pages. | |
 | `confluence.noticeTemplate` | `string` | Template string to use for the notice message. | |
 | `confluence.dryRun` | `boolean` | Log create, update or delete requests to Confluence instead of really making them | `false` |
+| `dryRun` | `boolean` | Process markdown files without sending them to `confluence-sync`. Useful to early detection of possible errors in configuration, etc. Note that, requests that would be made to Confluence won't be logged, use `confluence.dryRun` for that, which also connects to Confluence to calculate the requests to do | `false` |
 | `config.readArguments` | `boolean` | Read configuration from arguments or not | `false` |
 | `config.readFile` | `boolean` | Read configuration from file or not | `false` |
 | `config.readEnvironment` | `boolean` | Read configuration from environment or not | `false` |
