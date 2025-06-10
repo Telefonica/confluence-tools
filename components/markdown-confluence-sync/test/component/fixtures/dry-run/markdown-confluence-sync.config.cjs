@@ -6,7 +6,7 @@ const path = require("node:path");
 module.exports = {
   confluence: {
     url: "https://my-confluence.com",
-    spaceKey: "CTO",
+    spaceKey: "FOO",
   },
   docsDir: path.join(__dirname, "./docs"),
   dryRun: true,
