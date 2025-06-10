@@ -37,6 +37,7 @@ describe("markdownConfluenceSync", () => {
       ...CONFIG,
       dryRun: true,
     });
+    customDocusaurusPages.read.mockResolvedValue([]);
 
     // Act
     await markdownConfluenceSync.sync();
