@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
+// SPDX-FileCopyrightText: 2025 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
 import { ChildProcessManager } from "@telefonica/child-process-manager";
