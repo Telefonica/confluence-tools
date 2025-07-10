@@ -4,6 +4,7 @@
 import type { LoggerInterface } from "@mocks-server/logger";
 import type { Models } from "confluence.js";
 import { ConfluenceClient } from "confluence.js";
+import axios from "axios";
 
 import type {
   Attachments,
@@ -22,6 +23,8 @@ import { CreatePageError } from "./errors/CreatePageError";
 import { DeletePageError } from "./errors/DeletePageError";
 import { PageNotFoundError } from "./errors/PageNotFoundError";
 import { UpdatePageError } from "./errors/UpdatePageError";
+
+const GET_CHILDREN_LIMIT = 100;
 
 export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomConfluenceClient
   implements ConfluenceClientInterface
@@ -47,15 +50,66 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
     return this._logger;
   }
 
+  public async getChildPages(
+    parentId: ConfluenceId,
+    start: number = 0,
+    otherChildren: Models.Content[] = [],
+  ): Promise<Models.Content[]> {
+    try {
+      this._logger.silly(`Getting child pages of parent with id ${parentId}`);
+      const response = await axios.get<Models.ContentChildren>(
+        `${this._config.url}/rest/api/content/${parentId}/child`,
+        {
+          params: {
+            start,
+            limit: 100,
+            expand: "page",
+          },
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${this._config.personalAccessToken}`,
+          },
+        },
+      );
+      this._logger.silly(
+        `Get child pages response of page ${parentId}, starting at ${start}: ${JSON.stringify(response.data, null, 2)}`,
+      );
+
+      const childrenResults = response.data.page?.results || [];
+      const size = response.data.page?.size || 0;
+
+      const allChildren: Models.Content[] = [
+        ...otherChildren,
+        ...childrenResults,
+      ];
+
+      if (start + childrenResults.length < size) {
+        this._logger.silly(
+          `There are more child pages of page with id ${parentId}, fetching next page starting from ${start + 100}`,
+        );
+        return this.getChildPages(
+          parentId,
+          start + GET_CHILDREN_LIMIT + 1,
+          allChildren,
+        );
+      }
+
+      return allChildren;
+    } catch (error) {
+      throw new PageNotFoundError(parentId, { cause: error });
+    }
+  }
+
   public async getPage(id: string): Promise<ConfluencePage> {
     try {
       this._logger.silly(`Getting page with id ${id}`);
 
-      const childrenRequest: Promise<Models.ContentChildren> =
+      /* const childrenRequest: Promise<Models.ContentChildren> =
         this._client.contentChildrenAndDescendants.getContentChildren({
           id,
           expand: ["page"],
-        });
+        }); */
+      const childrenRequest: Promise<Models.Content[]> = this.getChildPages(id);
 
       const pageRequest: Promise<Models.Content> =
         this._client.content.getContentById({
@@ -81,7 +135,7 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
         ancestors: response.ancestors?.map((ancestor) =>
           this._convertToConfluencePageBasicInfo(ancestor),
         ),
-        children: childrenResponse.page?.results?.map((child) =>
+        children: childrenResponse.map((child) =>
           this._convertToConfluencePageBasicInfo(child),
         ),
       };
