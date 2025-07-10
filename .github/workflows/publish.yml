@@ -5,6 +5,9 @@ name: Publish to NPM
 on:
   release:
     types: [published]
+  push:
+    branches:
+      - fix/CROSS-9856/many-child-pages
 jobs:
   publish:
     runs-on: ubuntu-latest
