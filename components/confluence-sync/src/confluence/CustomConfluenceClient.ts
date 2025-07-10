@@ -54,6 +54,7 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
       const childrenRequest: Promise<Models.ContentChildren> =
         this._client.contentChildrenAndDescendants.getContentChildren({
           id,
+          expand: ["page"],
         });
 
       const pageRequest: Promise<Models.Content> =
