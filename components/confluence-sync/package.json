@@ -1,7 +1,7 @@
 {
   "name": "@telefonica/confluence-sync",
   "description": "Creates/updates/deletes Confluence pages based on a list of objects containing the page contents. Supports nested pages and attachments upload",
-  "version": "2.0.1",
+  "version": "2.0.2-beta.1",
   "license": "Apache-2.0",
   "author": "Telefónica Innovación Digital",
   "repository": {

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
+// SPDX-FileCopyrightText: 2025 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
 import type { LoggerInterface } from "@mocks-server/logger";
@@ -59,7 +59,7 @@ describe("customConfluenceClient class", () => {
 
       expect(confluenceClient.content.getContentById).toHaveBeenCalledWith({
         id: "foo-id",
-        expand: ["ancestors", "version.number", "children.page"],
+        expand: ["ancestors", "version.number"],
       });
     });
 
@@ -71,15 +71,18 @@ describe("customConfluenceClient class", () => {
         ancestors: [
           { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
         ],
-        children: {
+      }));
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => ({
           page: {
             results: [
               { id: "foo-child-1-id", title: "foo-child-1" },
               { id: "foo-child-2-id", title: "foo-child-2" },
             ],
           },
-        },
-      }));
+        }),
+      );
+
       const response = await customConfluenceClient.getPage("foo-id");
 
       expect(response).toEqual({

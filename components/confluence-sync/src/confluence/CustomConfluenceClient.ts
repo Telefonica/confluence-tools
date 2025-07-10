@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
+// SPDX-FileCopyrightText: 2025 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
 import type { LoggerInterface } from "@mocks-server/logger";
@@ -50,13 +50,29 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
   public async getPage(id: string): Promise<ConfluencePage> {
     try {
       this._logger.silly(`Getting page with id ${id}`);
-      const response: Models.Content =
-        await this._client.content.getContentById({
+
+      const childrenRequest: Promise<Models.ContentChildren> =
+        this._client.contentChildrenAndDescendants.getContentChildren({
           id,
-          expand: ["ancestors", "version.number", "children.page"],
+          expand: ["children.page"],
         });
+
+      const pageRequest: Promise<Models.Content> =
+        this._client.content.getContentById({
+          id,
+          expand: ["ancestors", "version.number"],
+        });
+
+      const [response, childrenResponse] = await Promise.all([
+        pageRequest,
+        childrenRequest,
+      ]);
+
       this._logger.silly(
         `Get page response: ${JSON.stringify(response, null, 2)}`,
+      );
+      this._logger.silly(
+        `Get children response: ${JSON.stringify(childrenResponse, null, 2)}`,
       );
       return {
         title: response.title,
@@ -65,7 +81,7 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
         ancestors: response.ancestors?.map((ancestor) =>
           this._convertToConfluencePageBasicInfo(ancestor),
         ),
-        children: response.children?.page?.results?.map((child) =>
+        children: childrenResponse.page?.results?.map((child) =>
           this._convertToConfluencePageBasicInfo(child),
         ),
       };

@@ -13,6 +13,7 @@ const collection: CollectionDefinition[] = [
     from: "base",
     routes: [
       "confluence-get-page:empty-root",
+      "confluence-get-page-children:empty-root",
       "confluence-create-page:empty-root",
       // "confluence-update-page:success",
       // "confluence-delete-page:success",
@@ -23,6 +24,7 @@ const collection: CollectionDefinition[] = [
     from: "base",
     routes: [
       "confluence-get-page:default-root",
+      "confluence-get-page-children:default-root",
       "confluence-create-page:default-root",
       "confluence-update-page:default-root",
       "confluence-delete-page:default-root",
@@ -35,6 +37,7 @@ const collection: CollectionDefinition[] = [
     from: "base",
     routes: [
       "confluence-get-page:hierarchical-empty-root",
+      "confluence-get-page-children:hierarchical-empty-root",
       "confluence-create-page:hierarchical-empty-root",
       // "confluence-update-page:hierarchical-empty-root",
       // "confluence-delete-page:hierarchical-empty-root",
@@ -45,6 +48,7 @@ const collection: CollectionDefinition[] = [
     from: "base",
     routes: [
       "confluence-get-page:hierarchical-default-root",
+      "confluence-get-page-children:hierarchical-default-root",
       "confluence-create-page:hierarchical-default-root",
       "confluence-update-page:hierarchical-default-root",
       "confluence-delete-page:hierarchical-default-root",
@@ -55,6 +59,7 @@ const collection: CollectionDefinition[] = [
     from: "base",
     routes: [
       "confluence-get-page:flat-mode",
+      "confluence-get-page-children:flat-mode",
       "confluence-create-page:flat-mode",
       "confluence-update-page:flat-mode",
       "confluence-delete-page:flat-mode",
@@ -66,6 +71,7 @@ const collection: CollectionDefinition[] = [
     from: "base",
     routes: [
       "confluence-get-page:renamed-page",
+      "confluence-get-page-children:renamed-page",
       "confluence-create-page:renamed-page",
       "confluence-delete-page:renamed-page",
       "confluence-get-attachments:renamed-page",

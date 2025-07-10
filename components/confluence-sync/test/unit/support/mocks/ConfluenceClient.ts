@@ -6,6 +6,9 @@ jest.mock("confluence.js");
 import * as confluenceLibrary from "confluence.js";
 
 export const confluenceClient = {
+  contentChildrenAndDescendants: {
+    getContentChildren: jest.fn().mockResolvedValue({}),
+  },
   content: {
     getContentById: jest.fn().mockResolvedValue({}),
     createContent: jest.fn().mockResolvedValue({}),
