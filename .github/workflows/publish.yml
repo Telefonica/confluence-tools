@@ -5,9 +5,6 @@ name: Publish to NPM
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - fix/CROSS-9856/many-child-pages
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -23,5 +20,4 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           echo "@telefonica:registry=https://registry.npmjs.org/" >> ~/.npmrc
-          pnpm -r publish --no-git-checks --tag beta
-          
+          pnpm -r publish --no-git-checks

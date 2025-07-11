@@ -8,7 +8,6 @@
 /** @type {import('@mocks-server/core').Configuration} */
 
 module.exports = {
-  // log: "debug",
   mock: {
     collections: {
       // Selected collection

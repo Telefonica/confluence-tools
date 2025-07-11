@@ -7,7 +7,6 @@ on:
     branches:
       - release
       - main
-      - fix/CROSS-9856/many-child-pages
   pull_request:
     branches:
       - release

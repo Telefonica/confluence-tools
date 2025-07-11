@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
-## [2.0.2] - 2025-07-10
+## [2.0.2] - 2025-07-11
 
 ### Fixed
 
-* fix: Fix issue when a page has more than 25 children. There was an error when trying to update a children page that had 25 brothers. The API was not returning it as a child of the parent page, so the library was trying to create it as a new page instead of updating it. Now, we use another API call to get all children pages.
+* fix: Fix issue when a page has more than 25 children. There was an error when trying to update a children page that had 25 brothers. The API was not returning it as a child of the parent page, so the library was trying to create it as a new page instead of updating it. Now, we call directly to the Confluence API paginated and recursively to get all children pages, so we can update them correctly.
 
 ## [2.0.1] - 2025-04-15
 

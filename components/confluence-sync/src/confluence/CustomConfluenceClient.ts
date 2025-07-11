@@ -50,7 +50,7 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
     return this._logger;
   }
 
-  public async getChildPages(
+  private async _getChildPages(
     parentId: ConfluenceId,
     start: number = 0,
     otherChildren: Models.Content[] = [],
@@ -87,9 +87,9 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
         this._logger.silly(
           `There are more child pages of page with id ${parentId}, fetching next page starting from ${start + 100}`,
         );
-        return this.getChildPages(
+        return this._getChildPages(
           parentId,
-          start + GET_CHILDREN_LIMIT + 1,
+          start + GET_CHILDREN_LIMIT,
           allChildren,
         );
       }
@@ -104,12 +104,8 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
     try {
       this._logger.silly(`Getting page with id ${id}`);
 
-      /* const childrenRequest: Promise<Models.ContentChildren> =
-        this._client.contentChildrenAndDescendants.getContentChildren({
-          id,
-          expand: ["page"],
-        }); */
-      const childrenRequest: Promise<Models.Content[]> = this.getChildPages(id);
+      const childrenRequest: Promise<Models.Content[]> =
+        this._getChildPages(id);
 
       const pageRequest: Promise<Models.Content> =
         this._client.content.getContentById({
