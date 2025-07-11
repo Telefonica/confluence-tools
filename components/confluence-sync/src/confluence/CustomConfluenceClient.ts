@@ -62,7 +62,7 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
         {
           params: {
             start,
-            limit: 100,
+            limit: GET_CHILDREN_LIMIT,
             expand: "page",
           },
           headers: {
@@ -84,14 +84,11 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
       ];
 
       if (start + childrenResults.length < size) {
+        const newStart = start + GET_CHILDREN_LIMIT;
         this._logger.silly(
-          `There are more child pages of page with id ${parentId}, fetching next page starting from ${start + 100}`,
+          `There are more child pages of page with id ${parentId}, fetching next page starting from ${newStart}`,
         );
-        return this._getChildPages(
-          parentId,
-          start + GET_CHILDREN_LIMIT,
-          allChildren,
-        );
+        return this._getChildPages(parentId, newStart, allChildren);
       }
 
       return allChildren;
