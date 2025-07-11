@@ -23,7 +23,7 @@ body:
         - child-process-manager
         - confluence-sync
         - markdown-confluence-sync
-      default: 0
+      default: 2
     validations:
       required: true
   - type: textarea
@@ -41,8 +41,9 @@ body:
       label: Version
       description: What version are you using?
       options:
-        - 1.x (Default)
-      default: 0
+        - 1.x
+        - 2.x
+      default: 1
     validations:
       required: true
   - type: textarea

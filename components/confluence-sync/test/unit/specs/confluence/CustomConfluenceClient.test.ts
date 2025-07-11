@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
+// SPDX-FileCopyrightText: 2025 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
 import type { LoggerInterface } from "@mocks-server/logger";
 import { Logger } from "@mocks-server/logger";
 import type { AxiosResponse } from "axios";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import type { Models } from "confluence.js";
 
 import { cleanLogs } from "@support/Logs";
@@ -17,6 +17,12 @@ import type {
   ConfluenceClientInterface,
   ConfluencePage,
 } from "@src/index";
+
+// eslint-disable-next-line jest/no-untyped-mock-factory
+jest.mock("axios", () => ({
+  ...jest.requireActual("axios"),
+  get: jest.fn(),
+}));
 
 describe("customConfluenceClient class", () => {
   let logger: LoggerInterface;
@@ -51,6 +57,17 @@ describe("customConfluenceClient class", () => {
         { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
       ] as Models.Content[],
     } as Models.Content;
+
+    jest.spyOn(axios, "get").mockResolvedValue({
+      data: {
+        page: {
+          results: [
+            { id: "foo-child-1-id", title: "foo-child-1" },
+            { id: "foo-child-2-id", title: "foo-child-2" },
+          ],
+        },
+      } as Models.ContentChildren,
+    } as AxiosResponse);
   });
 
   describe("getPage method", () => {
@@ -59,7 +76,7 @@ describe("customConfluenceClient class", () => {
 
       expect(confluenceClient.content.getContentById).toHaveBeenCalledWith({
         id: "foo-id",
-        expand: ["ancestors", "version.number", "children.page"],
+        expand: ["ancestors", "version.number"],
       });
     });
 
@@ -71,15 +88,8 @@ describe("customConfluenceClient class", () => {
         ancestors: [
           { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
         ],
-        children: {
-          page: {
-            results: [
-              { id: "foo-child-1-id", title: "foo-child-1" },
-              { id: "foo-child-2-id", title: "foo-child-2" },
-            ],
-          },
-        },
       }));
+
       const response = await customConfluenceClient.getPage("foo-id");
 
       expect(response).toEqual({
@@ -103,6 +113,63 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
         "Error getting page with id foo-id: foo-error",
       );
+    });
+
+    it("should throw a PageNotFoundError if axios.get throws an error when getting children", async () => {
+      jest
+        .spyOn(axios, "get")
+        .mockImplementation()
+        .mockRejectedValueOnce("foo-error");
+
+      await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
+        "Error getting page with id foo-id: foo-error",
+      );
+    });
+
+    it("should call recursive getChildPages method to get all children of the page", async () => {
+      confluenceClient.content.getContentById.mockImplementation(() => ({
+        title: "foo-title",
+        id: "foo-id",
+        version: { number: 1 },
+        ancestors: [
+          { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
+        ],
+      }));
+      jest.spyOn(axios, "get").mockResolvedValue({
+        data: {
+          page: {
+            results: Array(100).fill({
+              id: "foo-child-1-id",
+              title: "foo-child-1",
+            }),
+            size: 1000,
+          },
+        } as Models.ContentChildren,
+      } as AxiosResponse);
+
+      const response = await customConfluenceClient.getPage("foo-id");
+
+      expect(axios.get).toHaveBeenCalledTimes(10);
+
+      expect(response.children).toHaveLength(1000);
+    });
+
+    it("should not fail if Confluence does not return results when requesting children", async () => {
+      confluenceClient.content.getContentById.mockImplementation(() => ({
+        title: "foo-title",
+        id: "foo-id",
+        version: { number: 1 },
+        ancestors: [
+          { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
+        ],
+      }));
+      jest.spyOn(axios, "get").mockResolvedValue({
+        data: {} as Models.ContentChildren,
+      } as AxiosResponse);
+
+      expect(
+        async () => await customConfluenceClient.getPage("foo-id"),
+      ).not.toThrow();
     });
   });
 

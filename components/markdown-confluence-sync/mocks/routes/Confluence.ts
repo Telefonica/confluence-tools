@@ -47,8 +47,35 @@ function getPageMiddleware(pages) {
         content: "",
         version: { number: 1 },
         ancestors: page.ancestors,
-        children: page.children,
       };
+      core.logger.info(`Sending page ${JSON.stringify(pageData)}`);
+      res.status(200).json(pageData);
+    } else {
+      core.logger.error(
+        `Page with id ${req.params.pageId} not found in Confluence`,
+      );
+      res.status(404).send();
+    }
+  };
+}
+
+function getPageChildrenMiddleware(pages) {
+  return (
+    req: ServerRequest,
+    res: ServerResponse,
+    _next: NextFunction,
+    core: ScopedCoreInterface,
+  ) => {
+    core.logger.info(
+      `Requested page children with id ${req.params.pageId} to Confluence`,
+    );
+
+    addRequest("confluence-get-page-children", req);
+    const page = pages.find(
+      (pageCandidate) => pageCandidate.id === req.params.pageId,
+    );
+    if (page) {
+      const pageData = page.children;
       core.logger.info(`Sending page ${JSON.stringify(pageData)}`);
       res.status(200).json(pageData);
     } else {
@@ -269,6 +296,64 @@ const confluenceRoutes: RouteDefinition[] = [
         type: "middleware",
         options: {
           middleware: getPageMiddleware(PAGES_WITH_CONFLUENCE_PAGE_ID),
+        },
+      },
+    ],
+  },
+  {
+    id: "confluence-get-page-children",
+    url: "/rest/api/content/:pageId/child",
+    method: "GET",
+    variants: [
+      {
+        id: "empty-root",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(PAGES_EMPTY_ROOT),
+        },
+      },
+      {
+        id: "default-root",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(PAGES_DEFAULT_ROOT_GET),
+        },
+      },
+      {
+        id: "with-root-page-name",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(PAGES_WITH_ROOT_PAGE_NAME),
+        },
+      },
+      {
+        id: "with-mdx-files",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(PAGES_WITH_MDX_FILES),
+        },
+      },
+      {
+        id: "with-confluence-title",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(PAGES_WITH_CONFLUENCE_TITLE),
+        },
+      },
+      {
+        id: "with-alternative-index-files",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(
+            PAGES_WITH_ALTERNATIVE_INDEX_FILES,
+          ),
+        },
+      },
+      {
+        id: "with-confluence-page-id",
+        type: "middleware",
+        options: {
+          middleware: getPageChildrenMiddleware(PAGES_WITH_CONFLUENCE_PAGE_ID),
         },
       },
     ],
