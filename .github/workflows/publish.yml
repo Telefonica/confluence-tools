@@ -21,4 +21,3 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           echo "@telefonica:registry=https://registry.npmjs.org/" >> ~/.npmrc
           pnpm -r publish --no-git-checks
-          

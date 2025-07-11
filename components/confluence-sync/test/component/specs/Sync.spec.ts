@@ -1,3 +1,4 @@
+/*eslint-disable jest/max-expects */
 // SPDX-FileCopyrightText: 2024 Telefónica Innovación Digital
 // SPDX-License-Identifier: Apache-2.0
 
@@ -504,6 +505,7 @@ describe("confluence-sync-pages library", () => {
       describe("when a page has been renamed", () => {
         let requests: SpyRequest[];
         let getPageRequests: SpyRequest[];
+        let getPageChildrenRequests: SpyRequest[];
 
         beforeAll(async () => {
           await changeMockCollection("renamed-page");
@@ -511,49 +513,83 @@ describe("confluence-sync-pages library", () => {
 
           requests = await getRequests();
           getPageRequests = await getRequestsByRouteId("confluence-get-page");
+          getPageChildrenRequests = await getRequestsByRouteId(
+            "confluence-get-page-children",
+          );
           createRequests = await getRequestsByRouteId("confluence-create-page");
           deleteRequests = await getRequestsByRouteId("confluence-delete-page");
         });
 
         it("should execute delete requests before create requests", async () => {
-          // First request is the one to get the root page
-          expect(requests[0].routeId).toBe("confluence-get-page");
-          expect(getPageRequests[0].params?.pageId).toBe("foo-root-id");
-          // Second request is the one to get the parent page, child of the root page
+          // Request to get the root page children
+          expect(requests[0].routeId).toBe("confluence-get-page-children");
+          expect(getPageChildrenRequests[0].params?.pageId).toBe("foo-root-id");
+          // Request to get the root page
           expect(requests[1].routeId).toBe("confluence-get-page");
+          expect(getPageRequests[0].params?.pageId).toBe("foo-root-id");
+
+          // Request to get the root page children
+          expect(requests[2].routeId).toBe("confluence-get-page-children");
+          expect(getPageChildrenRequests[1].params?.pageId).toBe(
+            "foo-parent-id",
+          );
+          // Request to get the parent page, child of the root page
+          expect(requests[3].routeId).toBe("confluence-get-page");
           expect(getPageRequests[1].params?.pageId).toBe("foo-parent-id");
-          // Third request has to be the one to delete the parent page
-          expect(requests[2].routeId).toBe("confluence-delete-page");
+
+          // Request to delete the parent page
+          expect(requests[4].routeId).toBe("confluence-delete-page");
           expect(deleteRequests[0].params?.pageId).toBe("foo-parent-id");
-          // Fourth request has to be the one to create the renamed page because is child of the root page
-          expect(requests[3].routeId).toBe("confluence-create-page");
+          // Request to create the renamed page because is child of the root page
+          expect(requests[5].routeId).toBe("confluence-create-page");
           expect(createRequests[0].body?.title).toBe("foo-renamed-title");
-          // Fifth request has to be the one to get the child1 page which is child of the parent page
-          expect(requests[4].routeId).toBe("confluence-get-page");
-          expect(getPageRequests[2].params?.pageId).toBe("foo-child1-id");
-          // Sixth request has to be the one to delete the child1 page
-          expect(requests[5].routeId).toBe("confluence-delete-page");
-          expect(deleteRequests[1].params?.pageId).toBe("foo-child1-id");
-          // Seventh request has to be the one to create the child1 page because is child of the renamed page
-          expect(requests[6].routeId).toBe("confluence-create-page");
-          expect(createRequests[1].body?.title).toBe("foo-child1-title");
-          // Eighth request has to be the one to get the grandChild1 page which is child of the child1 page child of parent page
+
+          // Request to get the child1 page which is child of the parent page
+          expect(requests[6].routeId).toBe("confluence-get-page-children");
+          expect(getPageChildrenRequests[2].params?.pageId).toBe(
+            "foo-child1-id",
+          );
+          // Request to get the child1 page which is child of the parent page
           expect(requests[7].routeId).toBe("confluence-get-page");
-          expect(getPageRequests[3].params?.pageId).toBe("foo-grandChild1-id");
-          // Ninth request has to be the one to delete the grandChild1 page
+          expect(getPageRequests[2].params?.pageId).toBe("foo-child1-id");
+
+          // Request to delete the child1 page
           expect(requests[8].routeId).toBe("confluence-delete-page");
+          expect(deleteRequests[1].params?.pageId).toBe("foo-child1-id");
+          // Request to create the child1 page because is child of the renamed page
+          expect(requests[9].routeId).toBe("confluence-create-page");
+          expect(createRequests[1].body?.title).toBe("foo-child1-title");
+
+          // Request to get the grandChild1 page which is child of the child1 page child of parent page
+          expect(requests[10].routeId).toBe("confluence-get-page-children");
+          expect(getPageChildrenRequests[3].params?.pageId).toBe(
+            "foo-grandChild1-id",
+          );
+          // Request to get the grandChild1 page which is child of the child1 page child of parent page
+          expect(requests[11].routeId).toBe("confluence-get-page");
+          expect(getPageRequests[3].params?.pageId).toBe("foo-grandChild1-id");
+
+          // Request to delete the grandChild1 page
+          expect(requests[12].routeId).toBe("confluence-delete-page");
           expect(deleteRequests[2].params?.pageId).toBe("foo-grandChild1-id");
-          // Tenth request has to be the one to get the grandChild2 page because is child of the child1 page child of parent page
-          expect(requests[9].routeId).toBe("confluence-get-page");
+
+          // Request to get the grandChild2 page children because is child of the child1 page child of parent page
+          expect(requests[13].routeId).toBe("confluence-get-page-children");
+          expect(getPageChildrenRequests[4].params?.pageId).toBe(
+            "foo-grandChild2-id",
+          );
+          // Request to get the grandChild2 page because is child of the child1 page child of parent page
+          expect(requests[14].routeId).toBe("confluence-get-page");
           expect(getPageRequests[4].params?.pageId).toBe("foo-grandChild2-id");
-          // Eleventh request has to be the one to delete the grandChild2 page
-          expect(requests[10].routeId).toBe("confluence-delete-page");
+
+          // Request to delete the grandChild2 page
+          expect(requests[15].routeId).toBe("confluence-delete-page");
           expect(deleteRequests[3].params?.pageId).toBe("foo-grandChild2-id");
-          // Twelfth request has to be the one to create the grandChild1 page because is child of the child1 page child of the renamed page
-          expect(requests[11].routeId).toBe("confluence-create-page");
+          // Request to create the grandChild1 page because is child of the child1 page child of the renamed page
+          expect(requests[16].routeId).toBe("confluence-create-page");
           expect(createRequests[2].body?.title).toBe("foo-grandChild1-title");
-          // Thirteenth request has to be the one to create the grandChild2 page because is child of the child1 page child of the renamed page
-          expect(requests[12].routeId).toBe("confluence-create-page");
+          // Request to create the grandChild2 page because is child of the child1 page child of the renamed page
+          expect(requests[17].routeId).toBe("confluence-create-page");
           expect(createRequests[3].body?.title).toBe("foo-grandChild2-title");
         });
 
