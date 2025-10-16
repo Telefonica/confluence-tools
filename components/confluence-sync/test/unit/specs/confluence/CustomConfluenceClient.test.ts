@@ -4,7 +4,7 @@
 import type { LoggerInterface } from "@mocks-server/logger";
 import { Logger } from "@mocks-server/logger";
 import type { AxiosResponse } from "axios";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import type { Models } from "confluence.js";
 
 import { cleanLogs } from "@support/Logs";
@@ -70,6 +70,176 @@ describe("customConfluenceClient class", () => {
         };
       },
     );
+  });
+
+  describe("constructor - authentication methods", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    describe("when using personalAccessToken (deprecated)", () => {
+      it("should create a client with OAuth2 authentication using personalAccessToken", () => {
+        const configWithToken = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          personalAccessToken: "foo-token",
+          logger,
+        };
+
+        expect(() => new CustomConfluenceClient(configWithToken)).not.toThrow();
+      });
+
+      it("should prioritize authentication config over personalAccessToken", () => {
+        const configWithBoth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          personalAccessToken: "foo-token",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          logger,
+        };
+
+        expect(() => new CustomConfluenceClient(configWithBoth)).not.toThrow();
+      });
+    });
+
+    describe("when using basic authentication", () => {
+      it("should create a client with basic authentication", () => {
+        const configWithBasic = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          logger,
+        };
+
+        expect(() => new CustomConfluenceClient(configWithBasic)).not.toThrow();
+      });
+    });
+
+    describe("when using OAuth2 authentication", () => {
+      it("should create a client with OAuth2 authentication", () => {
+        const configWithOAuth2 = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            oauth2: {
+              accessToken: "oauth2-token",
+            },
+          },
+          logger,
+        };
+
+        expect(
+          () => new CustomConfluenceClient(configWithOAuth2),
+        ).not.toThrow();
+      });
+    });
+
+    describe("when using JWT authentication", () => {
+      it("should create a client with JWT authentication", () => {
+        const configWithJWT = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+            },
+          },
+          logger,
+        };
+
+        expect(() => new CustomConfluenceClient(configWithJWT)).not.toThrow();
+      });
+
+      it("should create a client with JWT authentication including expiryTimeSeconds", () => {
+        const configWithJWTAndExpiry = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+              expiryTimeSeconds: 3600,
+            },
+          },
+          logger,
+        };
+
+        expect(
+          () => new CustomConfluenceClient(configWithJWTAndExpiry),
+        ).not.toThrow();
+      });
+    });
+
+    describe("when no authentication is provided", () => {
+      it("should throw an error when neither authentication nor personalAccessToken is provided", () => {
+        const configWithoutAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          logger,
+        };
+
+        expect(() => new CustomConfluenceClient(configWithoutAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+
+      it("should throw an error when authentication is null", () => {
+        const configWithNullAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: null,
+          logger,
+        };
+
+        // @ts-expect-error - Testing invalid authentication type
+        expect(() => new CustomConfluenceClient(configWithNullAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+
+      it("should throw an error when authentication is an empty object", () => {
+        const configWithEmptyAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {},
+          logger,
+        };
+
+        // @ts-expect-error - Testing invalid authentication type
+        expect(() => new CustomConfluenceClient(configWithEmptyAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+
+      it("should throw an error when authentication has invalid structure", () => {
+        const configWithInvalidAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            invalid: {
+              token: "some-token",
+            },
+          },
+          logger,
+        };
+
+        // @ts-expect-error - Testing invalid authentication type
+        expect(() => new CustomConfluenceClient(configWithInvalidAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+    });
   });
 
   describe("getPage method", () => {
