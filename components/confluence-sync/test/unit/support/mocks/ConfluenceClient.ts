@@ -12,6 +12,9 @@ export const confluenceClient = {
     updateContent: jest.fn().mockResolvedValue({}),
     deleteContent: jest.fn().mockResolvedValue({}),
   },
+  contentChildrenAndDescendants: {
+    getContentChildren: jest.fn().mockResolvedValue({}),
+  },
   contentAttachments: {
     getAttachments: jest.fn().mockResolvedValue({}),
     createAttachments: jest.fn().mockResolvedValue({}),

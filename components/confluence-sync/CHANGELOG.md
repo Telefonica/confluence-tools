@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## Unreleased
+
+### Added
+
+* feat: Add authentication options (OAuth2, Basic, JWT). Deprecate personalAccessToken.
+
 ## [2.0.2] - 2025-07-11
 
 ### Fixed

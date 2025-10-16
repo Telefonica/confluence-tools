@@ -7,6 +7,7 @@ import type {
   ConfluencePage,
   ConfluencePageBasicInfo,
   ConfluenceId,
+  ConfluenceClientAuthenticationConfig,
 } from "./confluence/CustomConfluenceClient.types";
 
 export enum SyncModes {
@@ -56,8 +57,13 @@ export interface ConfluenceSyncPagesConfig {
   spaceId: string;
   /** Confluence page under which all pages will be synced */
   rootPageId?: ConfluenceId;
-  /** Confluence personal access token */
-  personalAccessToken: string;
+  /**
+   * Confluence personal access token. Use authentication.oauth2.accessToken instead
+   * @deprecated Use authentication.oauth2.accessToken instead
+   */
+  personalAccessToken?: string;
+  /** Authentication configuration */
+  authentication?: ConfluenceClientAuthenticationConfig;
   /** Log level */
   logLevel?: LogLevel;
   /** Dry run option */

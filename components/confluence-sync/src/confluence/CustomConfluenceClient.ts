@@ -4,9 +4,8 @@
 import type { LoggerInterface } from "@mocks-server/logger";
 import type { Models } from "confluence.js";
 import { ConfluenceClient } from "confluence.js";
-import axios from "axios";
-
 import type {
+  ConfluenceClientAuthenticationConfig,
   Attachments,
   ConfluenceClientConfig,
   ConfluenceClientConstructor,
@@ -16,6 +15,7 @@ import type {
   ConfluenceId,
   CreatePageParams,
 } from "./CustomConfluenceClient.types";
+
 import { AttachmentsNotFoundError } from "./errors/AttachmentsNotFoundError";
 import { toConfluenceClientError } from "./errors/AxiosErrors";
 import { CreateAttachmentsError } from "./errors/CreateAttachmentsError";
@@ -26,6 +26,60 @@ import { UpdatePageError } from "./errors/UpdatePageError";
 
 const GET_CHILDREN_LIMIT = 100;
 
+/**
+ * Type guard to check if the authentication is basic
+ * @param auth - Object to check
+ * @returns True if the authentication is basic, false otherwise
+ */
+function isBasicAuthentication(
+  auth: ConfluenceClientAuthenticationConfig,
+): auth is { basic: { email: string; apiToken: string } } {
+  return (
+    (auth as { basic: { email: string; apiToken: string } }).basic !== undefined
+  );
+}
+
+/**
+ * Type guard to check if the authentication is OAuth2
+ * @param auth - Object to check
+ * @returns True if the authentication is OAuth2, false otherwise
+ */
+function isOAuth2Authentication(
+  auth: ConfluenceClientAuthenticationConfig,
+): auth is {
+  oauth2: { accessToken: string };
+} {
+  return (auth as { oauth2: { accessToken: string } }).oauth2 !== undefined;
+}
+
+/**
+ * Type guard to check if the authentication is JWT
+ * @param auth - Object to check
+ * @returns True if the authentication is JWT, false otherwise
+ */
+function isJWTAuthentication(
+  auth: ConfluenceClientAuthenticationConfig,
+): auth is {
+  jwt: { issuer: string; secret: string; expiryTimeSeconds?: number };
+} {
+  return (
+    (auth as { jwt: { issuer: string; secret: string } }).jwt !== undefined
+  );
+}
+
+function isAuthentication(
+  auth: unknown,
+): auth is ConfluenceClientAuthenticationConfig {
+  if (typeof auth !== "object" || auth === null) {
+    return false;
+  }
+  return (
+    isBasicAuthentication(auth as ConfluenceClientAuthenticationConfig) ||
+    isOAuth2Authentication(auth as ConfluenceClientAuthenticationConfig) ||
+    isJWTAuthentication(auth as ConfluenceClientAuthenticationConfig)
+  );
+}
+
 export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomConfluenceClient
   implements ConfluenceClientInterface
 {
@@ -35,11 +89,27 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
 
   constructor(config: ConfluenceClientConfig) {
     this._config = config;
+
+    if (
+      isAuthentication(config.authentication) === false &&
+      config.personalAccessToken === undefined
+    ) {
+      throw new Error(
+        "Either authentication or personalAccessToken must be provided",
+      );
+    }
+
+    const authentication = isAuthentication(config.authentication)
+      ? config.authentication
+      : {
+          oauth2: {
+            accessToken: config.personalAccessToken as string,
+          },
+        };
+
     this._client = new ConfluenceClient({
       host: config.url,
-      authentication: {
-        personalAccessToken: config.personalAccessToken,
-      },
+      authentication,
       apiPrefix: "/rest/",
     });
     this._logger = config.logger;
@@ -57,26 +127,19 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
   ): Promise<Models.Content[]> {
     try {
       this._logger.silly(`Getting child pages of parent with id ${parentId}`);
-      const response = await axios.get<Models.ContentChildren>(
-        `${this._config.url}/rest/api/content/${parentId}/child`,
-        {
-          params: {
-            start,
-            limit: GET_CHILDREN_LIMIT,
-            expand: "page",
-          },
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${this._config.personalAccessToken}`,
-          },
-        },
-      );
+      const response: Models.ContentChildren =
+        await this._client.contentChildrenAndDescendants.getContentChildren({
+          id: parentId,
+          start,
+          limit: GET_CHILDREN_LIMIT,
+          expand: ["page"],
+        });
       this._logger.silly(
-        `Get child pages response of page ${parentId}, starting at ${start}: ${JSON.stringify(response.data, null, 2)}`,
+        `Get child pages response of page ${parentId}, starting at ${start}: ${JSON.stringify(response.page, null, 2)}`,
       );
 
-      const childrenResults = response.data.page?.results || [];
-      const size = response.data.page?.size || 0;
+      const childrenResults = response.page?.results || [];
+      const size = response.page?.size || 0;
 
       const allChildren: Models.Content[] = [
         ...otherChildren,
@@ -133,7 +196,10 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
         ),
       };
     } catch (error) {
-      throw new PageNotFoundError(id, { cause: error });
+      if (!(error instanceof PageNotFoundError)) {
+        throw new PageNotFoundError(id, { cause: error });
+      }
+      throw error;
     }
   }
 

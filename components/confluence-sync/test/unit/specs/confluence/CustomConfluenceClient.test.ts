@@ -58,16 +58,18 @@ describe("customConfluenceClient class", () => {
       ] as Models.Content[],
     } as Models.Content;
 
-    jest.spyOn(axios, "get").mockResolvedValue({
-      data: {
-        page: {
-          results: [
-            { id: "foo-child-1-id", title: "foo-child-1" },
-            { id: "foo-child-2-id", title: "foo-child-2" },
-          ],
-        },
-      } as Models.ContentChildren,
-    } as AxiosResponse);
+    confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+      () => {
+        return {
+          page: {
+            results: [
+              { id: "foo-child-1-id", title: "foo-child-1" },
+              { id: "foo-child-2-id", title: "foo-child-2" },
+            ],
+          },
+        };
+      },
+    );
   });
 
   describe("getPage method", () => {
@@ -116,17 +118,19 @@ describe("customConfluenceClient class", () => {
     });
 
     it("should throw a PageNotFoundError if axios.get throws an error when getting children", async () => {
-      jest
-        .spyOn(axios, "get")
-        .mockImplementation()
-        .mockRejectedValueOnce("foo-error");
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => {
+          throw new Error("foo-error");
+        },
+      );
 
       await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
-        "Error getting page with id foo-id: foo-error",
+        "Error getting page with id foo-id: Error: foo-error",
       );
     });
 
     it("should call recursive getChildPages method to get all children of the page", async () => {
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockReset();
       confluenceClient.content.getContentById.mockImplementation(() => ({
         title: "foo-title",
         id: "foo-id",
@@ -135,21 +139,25 @@ describe("customConfluenceClient class", () => {
           { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
         ],
       }));
-      jest.spyOn(axios, "get").mockResolvedValue({
-        data: {
-          page: {
-            results: Array(100).fill({
-              id: "foo-child-1-id",
-              title: "foo-child-1",
-            }),
-            size: 1000,
-          },
-        } as Models.ContentChildren,
-      } as AxiosResponse);
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => {
+          return {
+            page: {
+              results: Array(100).fill({
+                id: "foo-child-1-id",
+                title: "foo-child-1",
+              }),
+              size: 1000,
+            },
+          };
+        },
+      );
 
       const response = await customConfluenceClient.getPage("foo-id");
 
-      expect(axios.get).toHaveBeenCalledTimes(10);
+      expect(
+        confluenceClient.contentChildrenAndDescendants.getContentChildren,
+      ).toHaveBeenCalledTimes(10);
 
       expect(response.children).toHaveLength(1000);
     });
@@ -163,9 +171,14 @@ describe("customConfluenceClient class", () => {
           { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
         ],
       }));
-      jest.spyOn(axios, "get").mockResolvedValue({
-        data: {} as Models.ContentChildren,
-      } as AxiosResponse);
+
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => {
+          return {
+            data: {} as Models.ContentChildren,
+          };
+        },
+      );
 
       expect(
         async () => await customConfluenceClient.getPage("foo-id"),
