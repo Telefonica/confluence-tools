@@ -23,6 +23,7 @@ import { CreatePageError } from "./errors/CreatePageError";
 import { DeletePageError } from "./errors/DeletePageError";
 import { PageNotFoundError } from "./errors/PageNotFoundError";
 import { UpdatePageError } from "./errors/UpdatePageError";
+import { CustomError } from "./errors/CustomError";
 
 const GET_CHILDREN_LIMIT = 100;
 
@@ -155,7 +156,8 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
       }
 
       return allChildren;
-    } catch (error) {
+    } catch (e) {
+      const error = toConfluenceClientError(e);
       throw new PageNotFoundError(parentId, { cause: error });
     }
   }
@@ -195,11 +197,12 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
           this._convertToConfluencePageBasicInfo(child),
         ),
       };
-    } catch (error) {
-      if (!(error instanceof PageNotFoundError)) {
+    } catch (e) {
+      if (!(e instanceof CustomError)) {
+        const error = toConfluenceClientError(e);
         throw new PageNotFoundError(id, { cause: error });
       }
-      throw error;
+      throw e;
     }
   }
 
@@ -313,7 +316,8 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
       try {
         this._logger.silly(`Deleting content with id ${id}`);
         await this._client.content.deleteContent({ id });
-      } catch (error) {
+      } catch (e) {
+        const error = toConfluenceClientError(e);
         throw new DeletePageError(id, { cause: error });
       }
     } else {
@@ -338,7 +342,8 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
           title: attachment.title,
         })) || []
       );
-    } catch (error) {
+    } catch (e) {
+      const error = toConfluenceClientError(e);
       throw new AttachmentsNotFoundError(id, { cause: error });
     }
   }
@@ -366,7 +371,8 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
         this._logger.silly(
           `Create attachments response: ${JSON.stringify(response, null, 2)}`,
         );
-      } catch (error) {
+      } catch (e) {
+        const error = toConfluenceClientError(e);
         throw new CreateAttachmentsError(id, { cause: error });
       }
     } else {

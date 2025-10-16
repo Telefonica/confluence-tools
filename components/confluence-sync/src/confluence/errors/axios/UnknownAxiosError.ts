@@ -3,7 +3,9 @@
 
 import type { AxiosError } from "axios";
 
-export class UnknownAxiosError extends Error {
+import { CustomError } from "../CustomError";
+
+export class UnknownAxiosError extends CustomError {
   constructor(error: AxiosError) {
     super(
       `Axios Error

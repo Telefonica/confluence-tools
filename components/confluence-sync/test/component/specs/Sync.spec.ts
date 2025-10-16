@@ -407,8 +407,8 @@ describe("confluence-sync-pages library", () => {
           });
 
           it("should throw an error", async () => {
-            expect(error).toContain(
-              `Error creating page with title foo-wrongPage-title: Error: Bad Request`,
+            expect(error).toBe(
+              `Error creating page with title foo-wrongPage-title: Unknown Error`,
             );
           });
 
@@ -445,8 +445,8 @@ describe("confluence-sync-pages library", () => {
           });
 
           it("should throw an error", async () => {
-            expect(error).toContain(
-              `Error updating page with id foo-grandChild2-id and title foo-grandChild2-title: Error: Bad Request`,
+            expect(error).toBe(
+              `Error updating page with id foo-grandChild2-id and title foo-grandChild2-title: Unknown Error`,
             );
           });
 
@@ -484,7 +484,7 @@ describe("confluence-sync-pages library", () => {
 
           it("should throw an error", async () => {
             expect(error).toBe(
-              `Error deleting content with id foo-child1-id: AxiosError: Request failed with status code 404`,
+              `Error deleting content with id foo-child1-id: Unknown Error`,
             );
           });
 
@@ -658,7 +658,7 @@ describe("confluence-sync-pages library", () => {
                 },
               ]),
             ).rejects.toThrow(
-              `Error getting page with id ${wrongPage.id}: AxiosError: Request failed with status code 404`,
+              `Error getting page with id ${wrongPage.id}: Unknown Error`,
             );
           });
         });

@@ -348,7 +348,7 @@ describe("customConfluenceClient class", () => {
         .mockRejectedValueOnce("foo-error");
 
       await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
-        "Error getting page with id foo-id: foo-error",
+        "Error getting page with id foo-id: Unexpected Error: foo-error",
       );
     });
 
@@ -360,7 +360,7 @@ describe("customConfluenceClient class", () => {
       );
 
       await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
-        "Error getting page with id foo-id: Error: foo-error",
+        "Error getting page with id foo-id: Unexpected Error: foo-error",
       );
     });
 
@@ -514,7 +514,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Bad Request",
+            "Error creating page with title foo-title: Bad Request",
           ),
         }),
       );
@@ -533,7 +533,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Unauthorized",
+            "Error creating page with title foo-title: Unauthorized",
           ),
         }),
       );
@@ -552,7 +552,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Unauthorized",
+            "Error creating page with title foo-title: Unauthorized",
           ),
         }),
       );
@@ -571,7 +571,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Internal Server Error",
+            "Error creating page with title foo-title: Internal Server Error",
           ),
         }),
       );
@@ -586,7 +586,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Axios Error",
+            "Error creating page with title foo-title: Axios Error",
           ),
         }),
       );
@@ -599,7 +599,18 @@ describe("customConfluenceClient class", () => {
         .mockRejectedValueOnce("foo-error");
 
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
-        "Error creating page with title foo-title: Error: Unexpected Error: foo-error",
+        "Error creating page with title foo-title: Unexpected Error: foo-error",
+      );
+    });
+
+    it("should throw an error if confluence.js lib throws an empty error", async () => {
+      jest
+        .spyOn(confluenceClient.content, "createContent")
+        .mockImplementation()
+        .mockRejectedValueOnce("");
+
+      await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
+        "Error creating page with title foo-title: Unknown Error",
       );
     });
   });
@@ -700,7 +711,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Bad Request",
+            "Error updating page with id foo-id and title foo-title: Bad Request",
           ),
         }),
       );
@@ -719,7 +730,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Unauthorized",
+            "Error updating page with id foo-id and title foo-title: Unauthorized",
           ),
         }),
       );
@@ -738,7 +749,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Unauthorized",
+            "Error updating page with id foo-id and title foo-title: Unauthorized",
           ),
         }),
       );
@@ -757,7 +768,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Internal Server Error",
+            "Error updating page with id foo-id and title foo-title: Internal Server Error",
           ),
         }),
       );
@@ -772,7 +783,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Axios Error",
+            "Error updating page with id foo-id and title foo-title: Axios Error",
           ),
         }),
       );
@@ -785,7 +796,7 @@ describe("customConfluenceClient class", () => {
         .mockRejectedValueOnce("foo-error");
 
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
-        "Error updating page with id foo-id and title foo-title: Error: Unexpected Error: foo-error",
+        "Error updating page with id foo-id and title foo-title: Unexpected Error: foo-error",
       );
     });
   });
@@ -807,7 +818,9 @@ describe("customConfluenceClient class", () => {
 
       await expect(
         customConfluenceClient.deleteContent(page.id),
-      ).rejects.toThrow("Error deleting content with id foo-id: foo-error");
+      ).rejects.toThrow(
+        "Error deleting content with id foo-id: Unexpected Error: foo-error",
+      );
     });
   });
 
@@ -854,7 +867,7 @@ describe("customConfluenceClient class", () => {
       await expect(
         customConfluenceClient.getAttachments(page.id),
       ).rejects.toThrow(
-        "Error getting attachments of page with id foo-id: foo-error",
+        "Error getting attachments of page with id foo-id: Unexpected Error: foo-error",
       );
     });
   });
@@ -896,7 +909,7 @@ describe("customConfluenceClient class", () => {
       await expect(
         customConfluenceClient.createAttachments(page.id, attachments),
       ).rejects.toThrow(
-        "Error creating attachments of page with id foo-id: foo-error",
+        "Error creating attachments of page with id foo-id: Unexpected Error: foo-error",
       );
     });
   });

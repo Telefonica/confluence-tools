@@ -9,8 +9,11 @@ import { InternalServerError } from "./axios/InternalServerError";
 import { UnauthorizedError } from "./axios/UnauthorizedError";
 import { UnexpectedError } from "./axios/UnexpectedError";
 import { UnknownAxiosError } from "./axios/UnknownAxiosError";
+import { UnknownError } from "./UnknownError";
 
-export function toConfluenceClientError(error: unknown): Error {
+import { CustomError } from "./CustomError";
+
+export function toConfluenceClientError(error: unknown): CustomError {
   if ((error as AxiosError).name === "AxiosError") {
     const axiosError = error as AxiosError;
     if (axiosError.response?.status === HttpStatusCode.BadRequest) {
@@ -28,5 +31,8 @@ export function toConfluenceClientError(error: unknown): Error {
 
     return new UnknownAxiosError(axiosError);
   }
-  return new UnexpectedError(error);
+  if (!error) {
+    return new UnknownError();
+  }
+  return new UnexpectedError((error as Error).message || error);
 }
