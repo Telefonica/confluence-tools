@@ -8,7 +8,10 @@ import { AxiosError } from "axios";
 import type { Models } from "confluence.js";
 
 import { cleanLogs } from "@support/Logs";
-import { confluenceClient } from "@support/mocks/ConfluenceClient";
+import {
+  confluenceClient,
+  ConfluenceClientConstructor,
+} from "@support/mocks/ConfluenceClient";
 
 import { CustomConfluenceClient } from "@src/confluence/CustomConfluenceClient";
 import type {
@@ -47,6 +50,7 @@ describe("customConfluenceClient class", () => {
       version: 1,
       ancestors: [{ id: "foo-id-ancestor", title: "foo-ancestor" }],
     };
+    ConfluenceClientConstructor.mockClear();
     customConfluenceClient = new CustomConfluenceClient(config);
 
     defaultResponse = {
@@ -86,7 +90,17 @@ describe("customConfluenceClient class", () => {
           logger,
         };
 
-        expect(() => new CustomConfluenceClient(configWithToken)).not.toThrow();
+        new CustomConfluenceClient(configWithToken);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            oauth2: {
+              accessToken: "foo-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
       });
 
       it("should prioritize authentication config over personalAccessToken", () => {
@@ -103,7 +117,18 @@ describe("customConfluenceClient class", () => {
           logger,
         };
 
-        expect(() => new CustomConfluenceClient(configWithBoth)).not.toThrow();
+        new CustomConfluenceClient(configWithBoth);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
       });
     });
 
@@ -121,7 +146,18 @@ describe("customConfluenceClient class", () => {
           logger,
         };
 
-        expect(() => new CustomConfluenceClient(configWithBasic)).not.toThrow();
+        new CustomConfluenceClient(configWithBasic);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
       });
     });
 
@@ -138,9 +174,17 @@ describe("customConfluenceClient class", () => {
           logger,
         };
 
-        expect(
-          () => new CustomConfluenceClient(configWithOAuth2),
-        ).not.toThrow();
+        new CustomConfluenceClient(configWithOAuth2);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            oauth2: {
+              accessToken: "oauth2-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
       });
     });
 
@@ -158,7 +202,18 @@ describe("customConfluenceClient class", () => {
           logger,
         };
 
-        expect(() => new CustomConfluenceClient(configWithJWT)).not.toThrow();
+        new CustomConfluenceClient(configWithJWT);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
       });
 
       it("should create a client with JWT authentication including expiryTimeSeconds", () => {
@@ -175,9 +230,19 @@ describe("customConfluenceClient class", () => {
           logger,
         };
 
-        expect(
-          () => new CustomConfluenceClient(configWithJWTAndExpiry),
-        ).not.toThrow();
+        new CustomConfluenceClient(configWithJWTAndExpiry);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+              expiryTimeSeconds: 3600,
+            },
+          },
+          apiPrefix: "/rest/",
+        });
       });
     });
 
