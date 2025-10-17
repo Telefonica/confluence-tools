@@ -55,6 +55,7 @@ export const ConfluenceSyncPages: ConfluenceSyncPagesConstructor = class Conflue
     url,
     spaceId,
     personalAccessToken,
+    authentication,
     dryRun,
     syncMode,
     rootPageId,
@@ -66,6 +67,7 @@ export const ConfluenceSyncPages: ConfluenceSyncPagesConstructor = class Conflue
       url,
       spaceId,
       personalAccessToken,
+      authentication,
       logger: this._logger.namespace("confluence"),
       dryRun,
     });

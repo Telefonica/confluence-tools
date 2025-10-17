@@ -163,14 +163,6 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
           "Confluence URL is required. Please set confluence.url option.",
         );
       }
-      if (
-        !this._personalAccessTokenOption.value &&
-        !this._authenticationOption.value
-      ) {
-        throw new Error(
-          "Confluence personal access token or authentication option is required. Please set confluence.personalAccessToken option or confluence.authentication option.",
-        );
-      }
       if (!this._spaceKeyOption.value) {
         throw new Error(
           "Confluence space id is required. Please set confluence.spaceId option.",
