@@ -31,7 +31,11 @@ module.exports = {
   ],
   confluence: {
     url: process.env.CONFLUENCE_URL,
-    personalAccessToken: process.env.CONFLUENCE_PAT,
+    authentication: {
+      oauth2: {
+        accessToken: process.env.CONFLUENCE_PAT,
+      },
+    },
     spaceKey: process.env.CONFLUENCE_SPACE_KEY,
     rootPageId: process.env.CONFLUENCE_ROOT_PAGE_ID,
     rootPageName: "Cross",

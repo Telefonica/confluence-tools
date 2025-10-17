@@ -7,7 +7,10 @@ import type {
   OptionDefinition,
 } from "@mocks-server/config";
 import type { LoggerInterface } from "@mocks-server/logger";
-import type { ConfluenceInputPage } from "@telefonica/confluence-sync";
+import type {
+  ConfluenceInputPage,
+  ConfluenceClientAuthenticationConfig,
+} from "@telefonica/confluence-sync";
 
 import type { ModeOption } from "../MarkdownConfluenceSync.types";
 
@@ -27,8 +30,13 @@ declare global {
       confluence?: {
         /** Confluence URL */
         url?: UrlOptionValue;
-        /** Confluence personal access token */
+        /**
+         * Confluence personal access token
+         * @deprecated Use authentication.oauth2.accessToken instead
+         **/
         personalAccessToken?: PersonalAccessTokenOptionValue;
+        /** Confluence authentication */
+        authentication?: ConfluenceClientAuthenticationConfig;
         /** Confluence space key */
         spaceKey?: SpaceKeyOptionValue;
         /** Confluence root page id */
@@ -63,6 +71,11 @@ export type DryRunOptionDefinition = OptionDefinition<
   { hasDefault: true }
 >;
 
+export type AuthenticationOptionDefinition =
+  OptionDefinition<ConfluenceClientAuthenticationConfig>;
+
+export type AuthenticationOption =
+  OptionInterfaceOfType<ConfluenceClientAuthenticationConfig>;
 export type UrlOption = OptionInterfaceOfType<UrlOptionValue>;
 export type PersonalAccessTokenOption =
   OptionInterfaceOfType<PersonalAccessTokenOptionValue>;
