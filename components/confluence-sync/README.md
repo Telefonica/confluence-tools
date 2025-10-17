@@ -44,7 +44,7 @@ This library requires:
 
 * A Confluence instance.
 * The id of the Confluence space where the pages will be created.
-* A personal access token to authenticate. You can create a personal access token following the instructions in the [Atlassian documentation](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
+* Valid authentication credentials to access the Confluence instance. It uses the `confluence.js` library internally, so it supports the [same authentication methods](https://github.com/MrRefactoring/confluence.js?tab=readme-ov-file#authentication) as it.
 
 ### Compatibility
 
@@ -68,7 +68,11 @@ import { ConfluenceSyncPages } from '@telefonica/confluence-sync';
 
 const confluenceSyncPages = new ConfluenceSyncPages({
   url: "https://your.confluence.com",
-  personalAccessToken: "*******",
+  authentication: {
+    oauth2: {
+      accessToken: "your-oauth2-access-token"
+    }
+  },
   spaceId: "your-space-id",
   rootPageId: "12345678"
   logLevel: "debug",
@@ -191,7 +195,11 @@ import { ConfluenceSyncPages, SyncModes } from '@telefonica/confluence-sync';
 
 const confluenceSyncPages = new ConfluenceSyncPages({
   url: "https://my.confluence.es",
-  personalAccessToken: "*******",
+  authentication: {
+    oauth2: {
+      accessToken: "my-oauth2-access-token"
+    }
+  },
   spaceId: "MY-SPACE",
   logLevel: "debug",
   dryRun: false,
@@ -214,7 +222,17 @@ await confluenceSyncPages.sync([
 The main class of the library. It receives a configuration object with the following properties:
 
 * `url`: URL of the Confluence instance.
-* `personalAccessToken`: Personal access token to authenticate in Confluence.
+* `personalAccessToken`: Personal access token to authenticate in Confluence. To be DEPRECATED in future versions. Use the `authentication` property instead.
+* `authentication`: Authentication options to access Confluence. It supports the following methods:
+  * `oauth2`: OAuth2 authentication. It requires:
+    * `accessToken`: Access token to authenticate.
+  * `basic`: Basic authentication.
+    * `email`: Email of the user.
+    * `apiToken`: API token to authenticate.
+  * `jwt`: JWT authentication.
+    * `issuer`: Issuer of the JWT.
+    * `secret`: Secret to sign the JWT.
+    * `expiryTimeSeconds`: Optional expiry time of the JWT in seconds.
 * `spaceId`: Key of the space where the pages will be created.
 * `rootPageId`: ID of the root page under the pages will be created. It only can be missing if the sync mode is `flat` and all the pages provided have an id.
 * `logLevel`: One of `silly`, `debug`, `info`, `warn`, `error` or `silent`. Default is `silent`.

@@ -109,23 +109,6 @@ describe("confluenceSync", () => {
       );
     });
 
-    it("should fail if the personalAccessToken option is not defined", async () => {
-      // Arrange
-      const confluenceSync = new ConfluenceSync(confluenceSyncOptions);
-      await config.load({
-        ...CONFIG,
-        confluence: {
-          url: "foo",
-        },
-      });
-
-      // Act
-      // Assert
-      await expect(async () => await confluenceSync.sync([])).rejects.toThrow(
-        "Confluence personal access token is required. Please set confluence.personalAccessToken option.",
-      );
-    });
-
     it("should fail if the spaceKey option is not defined", async () => {
       // Arrange
       const confluenceSync = new ConfluenceSync(confluenceSyncOptions);

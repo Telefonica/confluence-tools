@@ -11,11 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
-## Unreleased
+## [2.1.0] - 2025-10-17
 
 ### Added
 
 * feat: Add authentication options (OAuth2, Basic, JWT). Deprecate personalAccessToken.
+
+### Changed
+
+* chore: Update confluence.js to 2.1.0
 
 ## [2.0.2] - 2025-07-11
 

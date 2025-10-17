@@ -177,6 +177,12 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
         );
       }
 
+      if (this._personalAccessTokenOption.value) {
+        this._logger.warn(
+          "The 'personalAccessToken' option is deprecated and will be removed in future versions. Please use the 'authentication' option instead.",
+        );
+      }
+
       this._confluencePageTransformer = new ConfluencePageTransformer({
         noticeMessage: this._noticeMessageOption.value,
         noticeTemplate: this._noticeTemplateOption.value,

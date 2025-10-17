@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## [2.2.0] - 2025-10-17
+
+### Added
+
+* feat: Update confluence-sync to 2.1.0. Add authentication options (OAuth2, Basic, JWT). Deprecate personalAccessToken.
+* feat: Add warning when using the deprecated personalAccessToken option.
+
 ## [2.1.1] - 2025-07-11
 
 ### Fixed
