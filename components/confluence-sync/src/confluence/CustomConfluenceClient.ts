@@ -68,6 +68,11 @@ function isJWTAuthentication(
   );
 }
 
+/**
+ * Type guard to check if the authentication is valid
+ * @param auth The authentication object to check
+ * @returns True if the authentication is valid, false otherwise
+ */
 function isAuthentication(
   auth: unknown,
 ): auth is ConfluenceClientAuthenticationConfig {
@@ -92,14 +97,15 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
     this._config = config;
 
     if (
-      isAuthentication(config.authentication) === false &&
-      config.personalAccessToken === undefined
+      !isAuthentication(config.authentication) &&
+      !config.personalAccessToken
     ) {
       throw new Error(
         "Either authentication or personalAccessToken must be provided",
       );
     }
 
+    // Backward compatibility with personalAccessToken
     const authentication = isAuthentication(config.authentication)
       ? config.authentication
       : {
