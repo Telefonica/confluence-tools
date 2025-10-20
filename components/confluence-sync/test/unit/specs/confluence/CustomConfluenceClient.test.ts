@@ -4,11 +4,14 @@
 import type { LoggerInterface } from "@mocks-server/logger";
 import { Logger } from "@mocks-server/logger";
 import type { AxiosResponse } from "axios";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import type { Models } from "confluence.js";
 
 import { cleanLogs } from "@support/Logs";
-import { confluenceClient } from "@support/mocks/ConfluenceClient";
+import {
+  confluenceClient,
+  ConfluenceClientConstructor,
+} from "@support/mocks/ConfluenceClient";
 
 import { CustomConfluenceClient } from "@src/confluence/CustomConfluenceClient";
 import type {
@@ -47,6 +50,7 @@ describe("customConfluenceClient class", () => {
       version: 1,
       ancestors: [{ id: "foo-id-ancestor", title: "foo-ancestor" }],
     };
+    ConfluenceClientConstructor.mockClear();
     customConfluenceClient = new CustomConfluenceClient(config);
 
     defaultResponse = {
@@ -58,16 +62,249 @@ describe("customConfluenceClient class", () => {
       ] as Models.Content[],
     } as Models.Content;
 
-    jest.spyOn(axios, "get").mockResolvedValue({
-      data: {
-        page: {
-          results: [
-            { id: "foo-child-1-id", title: "foo-child-1" },
-            { id: "foo-child-2-id", title: "foo-child-2" },
-          ],
-        },
-      } as Models.ContentChildren,
-    } as AxiosResponse);
+    confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+      () => {
+        return {
+          page: {
+            results: [
+              { id: "foo-child-1-id", title: "foo-child-1" },
+              { id: "foo-child-2-id", title: "foo-child-2" },
+            ],
+          },
+        };
+      },
+    );
+  });
+
+  describe("constructor - authentication methods", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    describe("when using personalAccessToken (deprecated)", () => {
+      it("should create a client with OAuth2 authentication using personalAccessToken", () => {
+        const configWithToken = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          personalAccessToken: "foo-token",
+          logger,
+        };
+
+        new CustomConfluenceClient(configWithToken);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            oauth2: {
+              accessToken: "foo-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
+      });
+
+      it("should prioritize authentication config over personalAccessToken", () => {
+        const configWithBoth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          personalAccessToken: "foo-token",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          logger,
+        };
+
+        new CustomConfluenceClient(configWithBoth);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
+      });
+    });
+
+    describe("when using basic authentication", () => {
+      it("should create a client with basic authentication", () => {
+        const configWithBasic = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          logger,
+        };
+
+        new CustomConfluenceClient(configWithBasic);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
+      });
+    });
+
+    describe("when using OAuth2 authentication", () => {
+      it("should create a client with OAuth2 authentication", () => {
+        const configWithOAuth2 = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            oauth2: {
+              accessToken: "oauth2-token",
+            },
+          },
+          logger,
+        };
+
+        new CustomConfluenceClient(configWithOAuth2);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            oauth2: {
+              accessToken: "oauth2-token",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
+      });
+    });
+
+    describe("when using JWT authentication", () => {
+      it("should create a client with JWT authentication", () => {
+        const configWithJWT = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+            },
+          },
+          logger,
+        };
+
+        new CustomConfluenceClient(configWithJWT);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+            },
+          },
+          apiPrefix: "/rest/",
+        });
+      });
+
+      it("should create a client with JWT authentication including expiryTimeSeconds", () => {
+        const configWithJWTAndExpiry = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+              expiryTimeSeconds: 3600,
+            },
+          },
+          logger,
+        };
+
+        new CustomConfluenceClient(configWithJWTAndExpiry);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            jwt: {
+              issuer: "test-issuer",
+              secret: "test-secret",
+              expiryTimeSeconds: 3600,
+            },
+          },
+          apiPrefix: "/rest/",
+        });
+      });
+    });
+
+    describe("when no authentication is provided", () => {
+      it("should throw an error when neither authentication nor personalAccessToken is provided", () => {
+        const configWithoutAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          logger,
+        };
+
+        expect(() => new CustomConfluenceClient(configWithoutAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+
+      it("should throw an error when authentication is null", () => {
+        const configWithNullAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: null,
+          logger,
+        };
+
+        // @ts-expect-error - Testing invalid authentication type
+        expect(() => new CustomConfluenceClient(configWithNullAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+
+      it("should throw an error when authentication is an empty object", () => {
+        const configWithEmptyAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {},
+          logger,
+        };
+
+        // @ts-expect-error - Testing invalid authentication type
+        expect(() => new CustomConfluenceClient(configWithEmptyAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+
+      it("should throw an error when authentication has invalid structure", () => {
+        const configWithInvalidAuth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          authentication: {
+            invalid: {
+              token: "some-token",
+            },
+          },
+          logger,
+        };
+
+        // @ts-expect-error - Testing invalid authentication type
+        expect(() => new CustomConfluenceClient(configWithInvalidAuth)).toThrow(
+          "Either authentication or personalAccessToken must be provided",
+        );
+      });
+    });
   });
 
   describe("getPage method", () => {
@@ -111,22 +348,24 @@ describe("customConfluenceClient class", () => {
         .mockRejectedValueOnce("foo-error");
 
       await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
-        "Error getting page with id foo-id: foo-error",
+        "Error getting page with id foo-id: Unexpected Error: foo-error",
       );
     });
 
     it("should throw a PageNotFoundError if axios.get throws an error when getting children", async () => {
-      jest
-        .spyOn(axios, "get")
-        .mockImplementation()
-        .mockRejectedValueOnce("foo-error");
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => {
+          throw new Error("foo-error");
+        },
+      );
 
       await expect(customConfluenceClient.getPage("foo-id")).rejects.toThrow(
-        "Error getting page with id foo-id: foo-error",
+        "Error getting page with id foo-id: Unexpected Error: foo-error",
       );
     });
 
     it("should call recursive getChildPages method to get all children of the page", async () => {
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockReset();
       confluenceClient.content.getContentById.mockImplementation(() => ({
         title: "foo-title",
         id: "foo-id",
@@ -135,21 +374,25 @@ describe("customConfluenceClient class", () => {
           { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
         ],
       }));
-      jest.spyOn(axios, "get").mockResolvedValue({
-        data: {
-          page: {
-            results: Array(100).fill({
-              id: "foo-child-1-id",
-              title: "foo-child-1",
-            }),
-            size: 1000,
-          },
-        } as Models.ContentChildren,
-      } as AxiosResponse);
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => {
+          return {
+            page: {
+              results: Array(100).fill({
+                id: "foo-child-1-id",
+                title: "foo-child-1",
+              }),
+              size: 1000,
+            },
+          };
+        },
+      );
 
       const response = await customConfluenceClient.getPage("foo-id");
 
-      expect(axios.get).toHaveBeenCalledTimes(10);
+      expect(
+        confluenceClient.contentChildrenAndDescendants.getContentChildren,
+      ).toHaveBeenCalledTimes(10);
 
       expect(response.children).toHaveLength(1000);
     });
@@ -163,9 +406,14 @@ describe("customConfluenceClient class", () => {
           { id: "foo-id-ancestor", title: "foo-ancestor", type: "page" },
         ],
       }));
-      jest.spyOn(axios, "get").mockResolvedValue({
-        data: {} as Models.ContentChildren,
-      } as AxiosResponse);
+
+      confluenceClient.contentChildrenAndDescendants.getContentChildren.mockImplementation(
+        () => {
+          return {
+            data: {} as Models.ContentChildren,
+          };
+        },
+      );
 
       expect(
         async () => await customConfluenceClient.getPage("foo-id"),
@@ -266,7 +514,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Bad Request",
+            "Error creating page with title foo-title: Bad Request",
           ),
         }),
       );
@@ -285,7 +533,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Unauthorized",
+            "Error creating page with title foo-title: Unauthorized",
           ),
         }),
       );
@@ -304,7 +552,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Unauthorized",
+            "Error creating page with title foo-title: Unauthorized",
           ),
         }),
       );
@@ -323,7 +571,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Internal Server Error",
+            "Error creating page with title foo-title: Internal Server Error",
           ),
         }),
       );
@@ -338,7 +586,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error creating page with title foo-title: Error: Axios Error",
+            "Error creating page with title foo-title: Axios Error",
           ),
         }),
       );
@@ -351,7 +599,18 @@ describe("customConfluenceClient class", () => {
         .mockRejectedValueOnce("foo-error");
 
       await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
-        "Error creating page with title foo-title: Error: Unexpected Error: foo-error",
+        "Error creating page with title foo-title: Unexpected Error: foo-error",
+      );
+    });
+
+    it("should throw an error if confluence.js lib throws an empty error", async () => {
+      jest
+        .spyOn(confluenceClient.content, "createContent")
+        .mockImplementation()
+        .mockRejectedValueOnce("");
+
+      await expect(customConfluenceClient.createPage(page)).rejects.toThrow(
+        "Error creating page with title foo-title: Unknown Error",
       );
     });
   });
@@ -452,7 +711,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Bad Request",
+            "Error updating page with id foo-id and title foo-title: Bad Request",
           ),
         }),
       );
@@ -471,7 +730,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Unauthorized",
+            "Error updating page with id foo-id and title foo-title: Unauthorized",
           ),
         }),
       );
@@ -490,7 +749,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Unauthorized",
+            "Error updating page with id foo-id and title foo-title: Unauthorized",
           ),
         }),
       );
@@ -509,7 +768,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Internal Server Error",
+            "Error updating page with id foo-id and title foo-title: Internal Server Error",
           ),
         }),
       );
@@ -524,7 +783,7 @@ describe("customConfluenceClient class", () => {
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
         expect.objectContaining({
           message: expect.stringContaining(
-            "Error updating page with id foo-id and title foo-title: Error: Axios Error",
+            "Error updating page with id foo-id and title foo-title: Axios Error",
           ),
         }),
       );
@@ -537,7 +796,7 @@ describe("customConfluenceClient class", () => {
         .mockRejectedValueOnce("foo-error");
 
       await expect(customConfluenceClient.updatePage(page)).rejects.toThrow(
-        "Error updating page with id foo-id and title foo-title: Error: Unexpected Error: foo-error",
+        "Error updating page with id foo-id and title foo-title: Unexpected Error: foo-error",
       );
     });
   });
@@ -559,7 +818,9 @@ describe("customConfluenceClient class", () => {
 
       await expect(
         customConfluenceClient.deleteContent(page.id),
-      ).rejects.toThrow("Error deleting content with id foo-id: foo-error");
+      ).rejects.toThrow(
+        "Error deleting content with id foo-id: Unexpected Error: foo-error",
+      );
     });
   });
 
@@ -606,7 +867,7 @@ describe("customConfluenceClient class", () => {
       await expect(
         customConfluenceClient.getAttachments(page.id),
       ).rejects.toThrow(
-        "Error getting attachments of page with id foo-id: foo-error",
+        "Error getting attachments of page with id foo-id: Unexpected Error: foo-error",
       );
     });
   });
@@ -648,7 +909,7 @@ describe("customConfluenceClient class", () => {
       await expect(
         customConfluenceClient.createAttachments(page.id, attachments),
       ).rejects.toThrow(
-        "Error creating attachments of page with id foo-id: foo-error",
+        "Error creating attachments of page with id foo-id: Unexpected Error: foo-error",
       );
     });
   });

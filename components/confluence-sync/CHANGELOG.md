@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## [2.1.0] - 2025-10-17
+
+### Added
+
+* feat: Add authentication options (OAuth2, Basic, JWT). Deprecate personalAccessToken.
+
+### Changed
+
+* feat: Use confluence.js library to retrieve also data about page children, not only pages. The new version 2.1.0 of confluence.js supports passing pagination options to get all children pages.
+* chore: Update confluence.js to 2.1.0
+* refactor: Adapt error handling to the new confluence.js error structure.
+
 ## [2.0.2] - 2025-07-11
 
 ### Fixed

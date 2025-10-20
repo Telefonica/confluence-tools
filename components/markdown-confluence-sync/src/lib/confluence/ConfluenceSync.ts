@@ -32,6 +32,8 @@ import type {
   UrlOptionDefinition,
   NoticeTemplateOptionDefinition,
   NoticeTemplateOption,
+  AuthenticationOptionDefinition,
+  AuthenticationOption,
 } from "./ConfluenceSync.types.js";
 import { ConfluencePageTransformer } from "./transformer/ConfluencePageTransformer.js";
 import type { ConfluencePageTransformerInterface } from "./transformer/ConfluencePageTransformer.types.js";
@@ -78,6 +80,11 @@ const dryRunOption: DryRunOptionDefinition = {
   default: false,
 };
 
+const authenticationOption: AuthenticationOptionDefinition = {
+  name: "authentication",
+  type: "object",
+};
+
 export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   implements ConfluenceSyncInterface
 {
@@ -90,6 +97,7 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   private _rootPageNameOption: RootPageNameOption;
   private _noticeMessageOption: NoticeMessageOption;
   private _noticeTemplateOption: NoticeTemplateOption;
+  private _authenticationOption: AuthenticationOption;
   private _dryRunOption: DryRunOption;
   private _initialized = false;
   private _logger: LoggerInterface;
@@ -113,6 +121,9 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
     this._noticeTemplateOption = config.addOption(
       noticeTemplateOption,
     ) as NoticeTemplateOption;
+    this._authenticationOption = config.addOption(
+      authenticationOption,
+    ) as AuthenticationOption;
     this._dryRunOption = config.addOption(dryRunOption) as DryRunOption;
     this._modeOption = mode;
     this._logger = logger;
@@ -152,11 +163,6 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
           "Confluence URL is required. Please set confluence.url option.",
         );
       }
-      if (!this._personalAccessTokenOption.value) {
-        throw new Error(
-          "Confluence personal access token is required. Please set confluence.personalAccessToken option.",
-        );
-      }
       if (!this._spaceKeyOption.value) {
         throw new Error(
           "Confluence space id is required. Please set confluence.spaceId option.",
@@ -171,6 +177,12 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
         );
       }
 
+      if (this._personalAccessTokenOption.value) {
+        this._logger.warn(
+          "The 'personalAccessToken' option is deprecated and will be removed in future versions. Please use the 'authentication' option instead.",
+        );
+      }
+
       this._confluencePageTransformer = new ConfluencePageTransformer({
         noticeMessage: this._noticeMessageOption.value,
         noticeTemplate: this._noticeTemplateOption.value,
@@ -182,6 +194,7 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
       this._confluenceSyncPages = new ConfluenceSyncPages({
         url: this._urlOption.value,
         personalAccessToken: this._personalAccessTokenOption.value,
+        authentication: this._authenticationOption.value,
         spaceId: this._spaceKeyOption.value,
         rootPageId: this._rootPageIdOption.value,
         logLevel: this._logger.level,

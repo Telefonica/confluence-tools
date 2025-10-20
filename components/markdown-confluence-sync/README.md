@@ -58,8 +58,8 @@ In order to be able to sync the markdown files with Confluence, you need to have
 
 * A [Confluence](https://www.atlassian.com/es/software/confluence) instance.
 * The id of the Confluence space where the pages will be created.
-* A personal access token to authenticate. You can create a personal access token following the instructions in the [Atlassian documentation](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
 * Markdown file or files to be synced with Confluence. It can be as complex as a Docusaurus project docs folder, or as simple as a single README.md file.
+* Valid authentication credentials to access the Confluence instance. It uses the `confluence.js` library internally, so it supports the [same authentication methods](https://github.com/MrRefactoring/confluence.js?tab=readme-ov-file#authentication) as it.
 
 ### Compatibility
 
@@ -144,7 +144,11 @@ module.exports = {
   docsDir: "docs",
   confluence: {
     url: "https://my-confluence.es",
-    personalAccessToken: "*******",
+    authentication: {
+      oauth2: {
+        accessToken: "*******"
+      }
+    },
     spaceKey: "MY-SPACE",
     rootPageId: "my-root-page-id"
   }
@@ -254,7 +258,11 @@ module.exports = {
   filesPattern: "check*.{md,mdx}",
   confluence: {
     url: "https://my-confluence.es",
-    personalAccessToken: "*******",
+    authentication: {
+      oauth2: {
+        accessToken: "*******"
+      }
+    },
     spaceKey: "MY-SPACE",
     rootPageId: "my-root-page-id"
   }
@@ -276,7 +284,17 @@ The namespace for the configuration of this library is `markdown-confluence-sync
 | `filesMetadata` | `array` | Array of objects with the metadata of the files to sync. Each object must have the `path` property with the path of the file. For the rest of properties read the [Configuration per page](#configuration-per-page) section |  |
 | `docsDir` | `string` | Path to the docs directory. | `./docs` |
 | `confluence.url` | `string` | URL of the Confluence instance. | |
-| `confluence.personalAccessToken` | `string` | Personal access token to authenticate against the Confluence instance. | |
+| `confluence.personalAccessToken` | `string` | Deprecated. Personal access token to authenticate against the Confluence instance. | |
+| `confluence.authentication` | `object` | Object containing authentication options to access the Confluence instance. It supports the same methods [as the `confluence.js` library](https://github.com/MrRefactoring/confluence.js?tab=readme-ov-file#authentication). | |
+| `confluence.authentication.oauth2` | `object` | Object containing OAuth2 authentication options. | |
+| `confluence.authentication.oauth2.accessToken` | `string` | Access token for OAuth2 authentication. | |
+| `confluence.authentication.basic` | `object` | Object containing Basic authentication options. | |
+| `confluence.authentication.basic.email` | `string` | Email for Basic authentication. | |
+| `confluence.authentication.basic.apiToken` | `string` | ApiToken for Basic authentication. | |
+| `confluence.authentication.jwt` | `object` | Object containing JWT authentication options. | |
+| `confluence.authentication.jwt.issuer` | `string` | Issuer for JWT authentication. | |
+| `confluence.authentication.jwt.secret` | `string` | Secret for JWT authentication. | |
+| `confluence.authentication.jwt.expiryTimeSeconds` | `number` | Optional expiry time in seconds for JWT authentication. | |
 | `confluence.spaceKey` | `string` | Key of the Confluence space where the pages will be synced. | |
 | `confluence.rootPageId` | `string` | Id of the Confluence parent page where the pages will be synced. | |
 | `confluence.rootPageName` | `string` | Customize Confluence page titles by adding a prefix to all of them for improved organization and clarity | |
@@ -312,7 +330,12 @@ module.exports = {
   ignore: ["docs/no-sync/**"],
   confluence: {
     url: "https://my-confluence.es",
-    personalAccessToken: "*******",
+    authentication: {
+      basic: {
+        email: "<your-email>",
+        apiToken: "<your-api-token>"
+      }
+    },
     spaceKey: "MY-SPACE",
     rootPageId: "my-root-page-id"
   }
@@ -389,7 +412,13 @@ module.exports = {
   ],
   confluence: {
     url: "https://my.confluence.es",
-    personalAccessToken: "*******",
+    authentication: {
+      jwt: {
+        issuer: "my-issuer",
+        secret: "my-secret",
+        expiryTimeSeconds: 300,
+      },
+    },
     spaceKey: "MY-SPACE",
   },
 };
@@ -512,7 +541,12 @@ const markdownConfluenceSync = new MarkdownConfluenceSync({
   docsDir: path.resolve(__dirname, "..", "docs");
   confluence: {
     url: "https://my.confluence.es",
-    personalAccessToken: "*******",
+    authentication: {
+      basic: {
+        email: "<your-email>",
+        apiToken: "<your-api-token>"
+      }
+    },
     spaceKey: "MY-SPACE",
     rootPageId: "my-root-page-id"
   },

@@ -12,16 +12,18 @@ export const confluenceClient = {
     updateContent: jest.fn().mockResolvedValue({}),
     deleteContent: jest.fn().mockResolvedValue({}),
   },
+  contentChildrenAndDescendants: {
+    getContentChildren: jest.fn().mockResolvedValue({}),
+  },
   contentAttachments: {
     getAttachments: jest.fn().mockResolvedValue({}),
     createAttachments: jest.fn().mockResolvedValue({}),
   },
 };
 
-/* ts ignore next line because it expects a mock with the same parameters as the confluence client
- * but there are a lot of them useless for the test */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore-next-line
-jest.spyOn(confluenceLibrary, "ConfluenceClient").mockImplementation(() => {
-  return confluenceClient;
-});
+export const ConfluenceClientConstructor = jest
+  .spyOn(confluenceLibrary, "ConfluenceClient")
+  // @ts-expect-error The mock has not all methods
+  .mockImplementation(() => {
+    return confluenceClient;
+  });

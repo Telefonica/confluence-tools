@@ -30,10 +30,47 @@ export interface ConfluencePage {
   children?: ConfluencePageBasicInfo[];
 }
 
+export type ConfluenceClientBasicAuthenticationConfig = {
+  basic: {
+    /** Basic auth email */
+    email: string;
+    /** Basic auth API token */
+    apiToken: string;
+  };
+};
+
+export type ConfluenceClientOAuth2AuthenticationConfig = {
+  oauth2: {
+    /** OAuth2 access token */
+    accessToken: string;
+  };
+};
+
+export type ConfluenceClientJWTAuthenticationConfig = {
+  jwt: {
+    /** JWT issuer */
+    issuer: string;
+    /** JWT secret */
+    secret: string;
+    /** JWT expiry time in seconds */
+    expiryTimeSeconds?: number;
+  };
+};
+
+export type ConfluenceClientAuthenticationConfig =
+  | ConfluenceClientBasicAuthenticationConfig
+  | ConfluenceClientOAuth2AuthenticationConfig
+  | ConfluenceClientJWTAuthenticationConfig;
+
 /** Config for creating a Confluence client */
 export interface ConfluenceClientConfig {
-  /** Confluence personal access token */
-  personalAccessToken: string;
+  /**
+   * Confluence personal access token
+   * @deprecated Use authentication.oauth2.accessToken instead
+   **/
+  personalAccessToken?: string;
+  /** Confluence authentication configuration */
+  authentication?: ConfluenceClientAuthenticationConfig;
   /** Confluence url */
   url: string;
   /** Confluence space id */
