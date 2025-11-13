@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 #### Added
+
+* feat: Add code blocks transformation to Confluence code macro format.
+  Code blocks are now converted to Confluence's structured code macro
+  with syntax highlighting support. This feature is enabled by default
+  and can be disabled via `confluence.rehype.codeBlocks` configuration
+  option for compatibility with older Confluence versions.
+
 #### Changed
 #### Fixed
 #### Deprecated
