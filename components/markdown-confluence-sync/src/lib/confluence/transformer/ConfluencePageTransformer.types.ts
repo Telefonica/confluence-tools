@@ -24,6 +24,13 @@ export interface ConfluencePageTransformerOptions {
   spaceKey: string;
   /** Logger */
   logger?: LoggerInterface;
+  /**
+   * Enable code blocks transformation to Confluence code macro.
+   * When enabled, markdown code blocks will be converted to Confluence's
+   * structured code macro format with syntax highlighting support.
+   * @default false
+   */
+  codeBlocks?: boolean;
 }
 
 /** Creates a ConfluencePageTransformer interface */
