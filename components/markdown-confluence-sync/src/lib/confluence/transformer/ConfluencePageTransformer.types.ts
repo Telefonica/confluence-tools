@@ -6,16 +6,6 @@ import type { ConfluenceInputPage } from "@telefonica/confluence-sync";
 
 import type { ConfluenceSyncPage } from "../ConfluenceSync.types.js";
 
-export interface RehypePluginOptions {
-  /**
-   * Enable code blocks transformation to Confluence code macro.
-   * When enabled, markdown code blocks will be converted to Confluence's
-   * structured code macro format with syntax highlighting support.
-   * @default true
-   */
-  codeBlocks?: boolean;
-}
-
 export interface ConfluencePageTransformerOptions {
   /** Confluence page notice message */
   noticeMessage?: string;
@@ -34,8 +24,13 @@ export interface ConfluencePageTransformerOptions {
   spaceKey: string;
   /** Logger */
   logger?: LoggerInterface;
-  /** Rehype plugin options */
-  rehype?: RehypePluginOptions;
+  /**
+   * Enable code blocks transformation to Confluence code macro.
+   * When enabled, markdown code blocks will be converted to Confluence's
+   * structured code macro format with syntax highlighting support.
+   * @default false
+   */
+  codeBlocks?: boolean;
 }
 
 /** Creates a ConfluencePageTransformer interface */

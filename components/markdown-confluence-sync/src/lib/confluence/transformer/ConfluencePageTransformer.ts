@@ -59,7 +59,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     rootPageName,
     spaceKey,
     logger,
-    rehype,
+    codeBlocks,
   }: ConfluencePageTransformerOptions) {
     this._noticeMessage = noticeMessage;
     this._noticeTemplateRaw = noticeTemplate;
@@ -69,7 +69,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     this._rootPageName = rootPageName;
     this._spaceKey = spaceKey;
     this._logger = logger;
-    this._rehypeCodeBlocksEnabled = rehype?.codeBlocks ?? true;
+    this._rehypeCodeBlocksEnabled = codeBlocks ?? false;
   }
 
   public async transform(

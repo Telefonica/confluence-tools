@@ -9,9 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * feat: Add code blocks transformation to Confluence code macro format.
   Code blocks are now converted to Confluence's structured code macro
-  with syntax highlighting support. This feature is enabled by default
-  and can be disabled via `confluence.rehype.codeBlocks` configuration
-  option for compatibility with older Confluence versions.
+  with syntax highlighting support. This feature is disabled by default
+  and can be enabled via `codeBlocks` configuration option.
 
 #### Changed
 #### Fixed

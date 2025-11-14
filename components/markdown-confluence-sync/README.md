@@ -300,9 +300,8 @@ The namespace for the configuration of this library is `markdown-confluence-sync
 | `confluence.rootPageName` | `string` | Customize Confluence page titles by adding a prefix to all of them for improved organization and clarity | |
 | `confluence.noticeMessage` | `string` | Notice message to add at the beginning of the Confluence pages. | |
 | `confluence.noticeTemplate` | `string` | Template string to use for the notice message. | |
-| `confluence.rehype` | `object` | Rehype plugin options to customize markdown to Confluence HTML conversion. | |
-| `confluence.rehype.codeBlocks` | `boolean` | Enable conversion of code blocks to Confluence code macro format with syntax highlighting. When disabled, code blocks remain as plain HTML pre/code tags. | `true` |
 | `confluence.dryRun` | `boolean` | Log create, update or delete requests to Confluence instead of really making them | `false` |
+| `codeBlocks` | `boolean` | Enable conversion of code blocks to Confluence code macro format with syntax highlighting. When disabled, code blocks remain as plain HTML pre/code tags. | `false` |
 | `dryRun` | `boolean` | Process markdown files without sending them to `confluence-sync`. Useful to early detection of possible errors in configuration, etc. Note that, requests that would be made to Confluence won't be logged, use `confluence.dryRun` for that, which also connects to Confluence to calculate the requests to do | `false` |
 | `config.readArguments` | `boolean` | Read configuration from arguments or not | `false` |
 | `config.readFile` | `boolean` | Read configuration from file or not | `false` |
@@ -495,17 +494,16 @@ Apart of supporting the most common markdown features, the library also supports
       <ac:rich-text-body><p>This is the content of the details.</p></ac:rich-text-body>
     </ac:structured-macro>
     ```
-* Code blocks - Markdown fenced code blocks are converted to
+* Code blocks - Markdown fenced code blocks can be converted to
   Confluence code macro format with syntax highlighting support. This
-  feature is enabled by default but can be disabled via the
-  `confluence.rehype.codeBlocks` configuration option.
+  feature is disabled by default but can be enabled via the
+  `codeBlocks` configuration option.
   * The plugin converts fenced code blocks to Confluence's
     `<ac:structured-macro ac:name="code">` format.
   * Language syntax highlighting is preserved when specified in the
     markdown code fence.
-  * This feature can be disabled for compatibility with older
-    Confluence versions by setting
-    `confluence.rehype.codeBlocks: false`.
+  * This feature is disabled by default for compatibility with older
+    Confluence versions. Enable it by setting `codeBlocks: true`.
   * For example, the following markdown code block:
     ````markdown
     ```javascript
