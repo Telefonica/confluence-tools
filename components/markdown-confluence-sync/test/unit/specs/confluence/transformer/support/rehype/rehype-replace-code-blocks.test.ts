@@ -225,4 +225,27 @@ describe("rehype-replace-code-blocks", () => {
     expect(result).toContain('<ac:parameter ac:name="language">typescript');
     expect(result).toContain("&#x3C;![CDATA[const x = 42;]]>");
   });
+
+  it("should not handle classnames without language prefix", () => {
+    // Arrange
+    const html = '<pre><code class="highlight-line">const x = 42;</code></pre>';
+
+    // Act
+    const result = unified()
+      .use(rehypeParse)
+      .use(rehypeRaw)
+      .use(rehypeReplaceCodeBlocks)
+      .use(rehypeStringify, {
+        allowDangerousHtml: true,
+        closeSelfClosing: true,
+        tightSelfClosing: true,
+      })
+      .processSync(html)
+      .toString();
+
+    // Assert
+    expect(result).toContain('<ac:structured-macro ac:name="code">');
+    expect(result).not.toContain('<ac:parameter ac:name="language">');
+    expect(result).toContain("&#x3C;![CDATA[const x = 42;]]>");
+  });
 });

@@ -59,7 +59,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     rootPageName,
     spaceKey,
     logger,
-    codeBlocks,
+    rehype: { codeBlocks },
   }: ConfluencePageTransformerOptions) {
     this._noticeMessage = noticeMessage;
     this._noticeTemplateRaw = noticeTemplate;

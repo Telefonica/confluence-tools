@@ -301,7 +301,7 @@ The namespace for the configuration of this library is `markdown-confluence-sync
 | `confluence.noticeMessage` | `string` | Notice message to add at the beginning of the Confluence pages. | |
 | `confluence.noticeTemplate` | `string` | Template string to use for the notice message. | |
 | `confluence.dryRun` | `boolean` | Log create, update or delete requests to Confluence instead of really making them | `false` |
-| `codeBlocks` | `boolean` | Enable conversion of code blocks to Confluence code macro format with syntax highlighting. When disabled, code blocks remain as plain HTML pre/code tags. | `false` |
+| `rehype.codeBlocks` | `boolean` | Enable conversion of code blocks to Confluence code macro format with syntax highlighting. When disabled, code blocks remain as plain HTML pre/code tags. | `false` |
 | `dryRun` | `boolean` | Process markdown files without sending them to `confluence-sync`. Useful to early detection of possible errors in configuration, etc. Note that, requests that would be made to Confluence won't be logged, use `confluence.dryRun` for that, which also connects to Confluence to calculate the requests to do | `false` |
 | `config.readArguments` | `boolean` | Read configuration from arguments or not | `false` |
 | `config.readFile` | `boolean` | Read configuration from file or not | `false` |
@@ -497,13 +497,13 @@ Apart of supporting the most common markdown features, the library also supports
 * Code blocks - Markdown fenced code blocks can be converted to
   Confluence code macro format with syntax highlighting support. This
   feature is disabled by default but can be enabled via the
-  `codeBlocks` configuration option.
+  `rehype.codeBlocks` configuration option.
   * The plugin converts fenced code blocks to Confluence's
     `<ac:structured-macro ac:name="code">` format.
   * Language syntax highlighting is preserved when specified in the
     markdown code fence.
   * This feature is disabled by default for compatibility with older
-    Confluence versions. Enable it by setting `codeBlocks: true`.
+    Confluence versions. Enable it by setting `rehype.codeBlocks: true`.
   * For example, the following markdown code block:
     ````markdown
     ```javascript

@@ -104,7 +104,8 @@ function extractLanguage(codeElement: HastElement): string | undefined {
     return undefined;
   }
 
-  // className can be a string or an array of strings
+  // className is always an array of strings, but we check it for safety
+  // istanbul ignore next
   const classNames = Array.isArray(className) ? className : [className];
 
   // Look for a class that starts with "language-"

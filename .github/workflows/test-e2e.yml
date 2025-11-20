@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - origin/feat/65/rehype-codeblocks
 
 permissions:
   contents: read

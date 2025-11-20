@@ -50,6 +50,7 @@ describe("confluenceSync", () => {
       config: namespace,
       logger,
       mode: config.option("mode") as ModeOption,
+      rehypeConfig: config.addNamespace("rehype"),
     };
   });
 
