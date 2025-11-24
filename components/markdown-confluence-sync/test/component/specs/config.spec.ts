@@ -97,6 +97,59 @@ describe("configuration", () => {
       expect(cleanLogs(logs)).toContain(`mode option is flat`);
     });
 
+    it("should set apiPrefix to default value when not provided", async () => {
+      cli = new ChildProcessManager(
+        [
+          getBinaryPathFromFixtureFolder(),
+          "--confluence.url=https://foo-confluence.com",
+          "--confluence.spaceKey=FOO",
+          "--mode=tree",
+          "--confluence.rootPageId=123456",
+          "--confluence.personalAccessToken=abcd1234",
+        ],
+        {
+          cwd: getFixtureFolder("basic"),
+          silent: true,
+        },
+      );
+      const { exitCode, logs } = await cli.run();
+
+      expect(exitCode).toBe(1);
+      expect(cleanLogs(logs)).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining(`confluence.apiPrefix option is /rest/`),
+        ]),
+      );
+    });
+
+    it("should set apiPrefix to given value when provided", async () => {
+      cli = new ChildProcessManager(
+        [
+          getBinaryPathFromFixtureFolder(),
+          "--confluence.url=https://foo-confluence.com",
+          "--confluence.spaceKey=FOO",
+          "--mode=tree",
+          "--confluence.rootPageId=123456",
+          "--confluence.personalAccessToken=abcd1234",
+          "--confluence.apiPrefix=/custom-api/",
+        ],
+        {
+          cwd: getFixtureFolder("basic"),
+          silent: true,
+        },
+      );
+      const { exitCode, logs } = await cli.run();
+
+      expect(exitCode).toBe(1);
+      expect(cleanLogs(logs)).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining(
+            `confluence.apiPrefix option is /custom-api/`,
+          ),
+        ]),
+      );
+    });
+
     it(`should fail and throw log error when mode isn't valid mode`, async () => {
       cli = new ChildProcessManager(
         [getBinaryPathFromFixtureFolder(), "--mode=foo"],
