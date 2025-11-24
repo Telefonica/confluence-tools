@@ -50,7 +50,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
   private readonly _noticeTemplate?: TemplateDelegate<ConfluencePageTransformerTemplateData>;
   private readonly _rootPageName?: string;
   private readonly _spaceKey: string;
-  private readonly _logger?: LoggerInterface;
+  private readonly _logger: LoggerInterface;
   private readonly _rehypeCodeBlocksEnabled: boolean;
 
   constructor({
@@ -70,6 +70,10 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     this._spaceKey = spaceKey;
     this._logger = logger;
     this._rehypeCodeBlocksEnabled = codeBlocks ?? false;
+
+    logger?.debug(
+      `ConfluencePageTransformer initialized with rehype options: ${JSON.stringify({ codeBlocks: this._rehypeCodeBlocksEnabled })}`,
+    );
   }
 
   public async transform(
@@ -109,6 +113,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
 
       // Conditionally add code blocks plugin
       if (this._rehypeCodeBlocksEnabled) {
+        this._logger?.debug(`Registering rehypeReplaceCodeBlocks plugin`);
         processor = processor.use(rehypeReplaceCodeBlocks);
       }
 
