@@ -23,6 +23,8 @@ type NoticeMessageOptionValue = string;
 type NoticeTemplateOptionValue = string;
 type DryRunOptionValue = boolean;
 
+type RehypeCodeBlocksOptionValue = boolean;
+
 declare global {
   //eslint-disable-next-line @typescript-eslint/no-namespace
   namespace MarkdownConfluenceSync {
@@ -50,6 +52,10 @@ declare global {
         /** Confluence dry run */
         dryRun?: DryRunOptionValue;
       };
+      rehype?: {
+        /** Enable code blocks transformation to Confluence code macro */
+        codeBlocks?: RehypeCodeBlocksOptionValue;
+      };
     }
   }
 }
@@ -70,6 +76,8 @@ export type DryRunOptionDefinition = OptionDefinition<
   DryRunOptionValue,
   { hasDefault: true }
 >;
+export type RehypeCodeBlocksOptionDefinition =
+  OptionDefinition<RehypeCodeBlocksOptionValue>;
 
 export type AuthenticationOptionDefinition =
   OptionDefinition<ConfluenceClientAuthenticationConfig>;
@@ -91,6 +99,11 @@ export type DryRunOption = OptionInterfaceOfType<
   { hasDefault: true }
 >;
 
+export type RehypeCodeBlocksOption = OptionInterfaceOfType<
+  RehypeCodeBlocksOptionValue,
+  { hasDefault: true }
+>;
+
 export interface ConfluenceSyncOptions {
   /** Configuration interface */
   config: ConfigNamespaceInterface;
@@ -98,6 +111,8 @@ export interface ConfluenceSyncOptions {
   logger: LoggerInterface;
   /** Sync mode option */
   mode: ModeOption;
+  /** Rehype configuration namespace */
+  rehypeConfig: ConfigNamespaceInterface;
 }
 
 /** Creates a ConfluenceSyncInterface interface */

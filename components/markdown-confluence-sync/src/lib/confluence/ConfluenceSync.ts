@@ -34,6 +34,8 @@ import type {
   NoticeTemplateOption,
   AuthenticationOptionDefinition,
   AuthenticationOption,
+  RehypeCodeBlocksOptionDefinition,
+  RehypeCodeBlocksOption,
 } from "./ConfluenceSync.types.js";
 import { ConfluencePageTransformer } from "./transformer/ConfluencePageTransformer.js";
 import type { ConfluencePageTransformerInterface } from "./transformer/ConfluencePageTransformer.types.js";
@@ -85,6 +87,12 @@ const authenticationOption: AuthenticationOptionDefinition = {
   type: "object",
 };
 
+const rehypeCodeBlocksOption: RehypeCodeBlocksOptionDefinition = {
+  name: "codeBlocks",
+  type: "boolean",
+  default: false,
+};
+
 export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   implements ConfluenceSyncInterface
 {
@@ -102,8 +110,9 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   private _initialized = false;
   private _logger: LoggerInterface;
   private _modeOption: ModeOption;
+  private _rehypeCodeBlocksOption: RehypeCodeBlocksOption;
 
-  constructor({ config, logger, mode }: ConfluenceSyncOptions) {
+  constructor({ config, rehypeConfig, logger, mode }: ConfluenceSyncOptions) {
     this._urlOption = config.addOption(urlOption) as UrlOption;
     this._personalAccessTokenOption = config.addOption(
       personalAccessTokenOption,
@@ -125,6 +134,11 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
       authenticationOption,
     ) as AuthenticationOption;
     this._dryRunOption = config.addOption(dryRunOption) as DryRunOption;
+
+    this._rehypeCodeBlocksOption = rehypeConfig.addOption(
+      rehypeCodeBlocksOption,
+    ) as RehypeCodeBlocksOption;
+
     this._modeOption = mode;
     this._logger = logger;
   }
@@ -189,6 +203,9 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
         rootPageName: this._rootPageNameOption.value,
         spaceKey: this._spaceKeyOption.value,
         logger: this._logger.namespace("transformer"),
+        rehype: {
+          codeBlocks: this._rehypeCodeBlocksOption.value,
+        },
       });
 
       this._confluenceSyncPages = new ConfluenceSyncPages({
