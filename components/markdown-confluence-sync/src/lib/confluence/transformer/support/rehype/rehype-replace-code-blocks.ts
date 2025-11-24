@@ -55,7 +55,7 @@ const rehypeReplaceCodeBlocks: UnifiedPlugin<[], Root> =
             },
             children: [
               {
-                type: "text" as const,
+                type: "raw" as const,
                 value: language,
               },
             ],
@@ -71,7 +71,7 @@ const rehypeReplaceCodeBlocks: UnifiedPlugin<[], Root> =
           properties: {},
           children: [
             {
-              type: "text" as const,
+              type: "raw" as const,
               value: `<![CDATA[${codeContent}]]>`,
             },
           ],
