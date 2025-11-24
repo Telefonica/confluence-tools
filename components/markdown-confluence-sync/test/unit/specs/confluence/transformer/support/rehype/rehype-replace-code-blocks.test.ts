@@ -36,7 +36,7 @@ describe("rehype-replace-code-blocks", () => {
     expect(result).toContain('<ac:parameter ac:name="language">');
     expect(result).toContain("javascript");
     expect(result).toContain("<ac:plain-text-body>");
-    expect(result).toContain("&#x3C;![CDATA[const x = 42;]]>");
+    expect(result).toContain("<![CDATA[const x = 42;]]>");
   });
 
   it("should replace code block without language to Confluence code macro", () => {
@@ -60,7 +60,7 @@ describe("rehype-replace-code-blocks", () => {
     expect(result).toContain('<ac:structured-macro ac:name="code">');
     expect(result).not.toContain('<ac:parameter ac:name="language">');
     expect(result).toContain("<ac:plain-text-body>");
-    expect(result).toContain("&#x3C;![CDATA[plain text code]]>");
+    expect(result).toContain("<![CDATA[plain text code]]>");
   });
 
   it("should handle different programming languages", () => {
@@ -75,13 +75,18 @@ describe("rehype-replace-code-blocks", () => {
         .use(rehypeParse)
         .use(rehypeStringify)
         .use(rehypeReplaceCodeBlocks)
+        .use(rehypeStringify, {
+          allowDangerousHtml: true,
+          closeSelfClosing: true,
+          tightSelfClosing: true,
+        })
         .processSync(html)
         .toString();
 
       // Assert
       expect(result).toContain('<ac:structured-macro ac:name="code">');
       expect(result).toContain(`<ac:parameter ac:name="language">${lang}`);
-      expect(result).toContain("&#x3C;![CDATA[code here]]>");
+      expect(result).toContain("<![CDATA[code here]]>");
     }
   });
 
@@ -105,9 +110,7 @@ describe("rehype-replace-code-blocks", () => {
 
     // Assert
     expect(result).toContain('<ac:structured-macro ac:name="code">');
-    expect(result).toContain(
-      "&#x3C;![CDATA[const str = \"Hello  &#x26; 'Friends'\";]]>",
-    );
+    expect(result).toContain("<![CDATA[const str = \"Hello  & 'Friends'\";]]>");
   });
 
   it("should handle multi-line code blocks", () => {
@@ -199,7 +202,7 @@ describe("rehype-replace-code-blocks", () => {
 
     // Assert
     expect(result).toContain('<ac:structured-macro ac:name="code">');
-    expect(result).toContain("<ac:plain-text-body>&#x3C;![CDATA[]]>");
+    expect(result).toContain("<ac:plain-text-body><![CDATA[]]>");
   });
 
   it("should handle code blocks with multiple class names", () => {
@@ -223,7 +226,7 @@ describe("rehype-replace-code-blocks", () => {
     // Assert
     expect(result).toContain('<ac:structured-macro ac:name="code">');
     expect(result).toContain('<ac:parameter ac:name="language">typescript');
-    expect(result).toContain("&#x3C;![CDATA[const x = 42;]]>");
+    expect(result).toContain("<![CDATA[const x = 42;]]>");
   });
 
   it("should not handle classnames without language prefix", () => {
@@ -246,6 +249,6 @@ describe("rehype-replace-code-blocks", () => {
     // Assert
     expect(result).toContain('<ac:structured-macro ac:name="code">');
     expect(result).not.toContain('<ac:parameter ac:name="language">');
-    expect(result).toContain("&#x3C;![CDATA[const x = 42;]]>");
+    expect(result).toContain("<![CDATA[const x = 42;]]>");
   });
 });

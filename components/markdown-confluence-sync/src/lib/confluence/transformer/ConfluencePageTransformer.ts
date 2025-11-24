@@ -50,7 +50,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
   private readonly _noticeTemplate?: TemplateDelegate<ConfluencePageTransformerTemplateData>;
   private readonly _rootPageName?: string;
   private readonly _spaceKey: string;
-  private readonly _logger: LoggerInterface;
+  private readonly _logger?: LoggerInterface;
   private readonly _rehypeCodeBlocksEnabled: boolean;
 
   constructor({

@@ -37,7 +37,7 @@ export interface ConfluencePageTransformerOptions {
   /** Confluence space key */
   spaceKey: string;
   /** Logger */
-  logger: LoggerInterface;
+  logger?: LoggerInterface;
   /** Rehype options */
   rehype: ConfluencePageTransformerRehypeOptions;
 }
