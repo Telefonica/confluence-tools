@@ -41,5 +41,5 @@ module.exports = {
     rootPageName: "Cross",
   },
   logLevel: "debug",
-  // rehype: { codeBlocks: true },
+  rehype: { codeBlocks: true },
 };
