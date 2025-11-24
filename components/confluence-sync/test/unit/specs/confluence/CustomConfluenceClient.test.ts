@@ -130,6 +130,35 @@ describe("customConfluenceClient class", () => {
           apiPrefix: "/rest/",
         });
       });
+
+      it("should set apiPrefix when provided", () => {
+        const configWithBoth = {
+          spaceId: "foo-space-id",
+          url: "foo-url",
+          personalAccessToken: "foo-token",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          logger,
+          apiPrefix: "/foo/",
+        };
+
+        new CustomConfluenceClient(configWithBoth);
+
+        expect(ConfluenceClientConstructor).toHaveBeenCalledWith({
+          host: "foo-url",
+          authentication: {
+            basic: {
+              email: "test@example.com",
+              apiToken: "basic-token",
+            },
+          },
+          apiPrefix: "/foo/",
+        });
+      });
     });
 
     describe("when using basic authentication", () => {

@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
+## [2.2.0] - 2025-11-24
+
+### Added
+
+* feat: Add apiPrefix option to configure the Confluence API prefix (default: /rest/).
+
 ## [2.1.0] - 2025-10-17
 
 ### Added

@@ -15,6 +15,7 @@ import type {
 import type { ModeOption } from "../MarkdownConfluenceSync.types";
 
 type UrlOptionValue = string;
+type ApiPrefixOptionValue = string;
 type PersonalAccessTokenOptionValue = string;
 type SpaceKeyOptionValue = string;
 type RootPageIdOptionValue = string;
@@ -32,6 +33,8 @@ declare global {
       confluence?: {
         /** Confluence URL */
         url?: UrlOptionValue;
+        /** Optional prefix for the Confluence API urls. Default is `/rest/`. */
+        apiPrefix?: string;
         /**
          * Confluence personal access token
          * @deprecated Use authentication.oauth2.accessToken instead
@@ -61,6 +64,7 @@ declare global {
 }
 
 export type UrlOptionDefinition = OptionDefinition<UrlOptionValue>;
+export type ApiPrefixOptionDefinition = OptionDefinition<ApiPrefixOptionValue>;
 export type PersonalAccessTokenOptionDefinition =
   OptionDefinition<PersonalAccessTokenOptionValue>;
 export type SpaceKeyOptionDefinition = OptionDefinition<SpaceKeyOptionValue>;
@@ -85,6 +89,7 @@ export type AuthenticationOptionDefinition =
 export type AuthenticationOption =
   OptionInterfaceOfType<ConfluenceClientAuthenticationConfig>;
 export type UrlOption = OptionInterfaceOfType<UrlOptionValue>;
+export type ApiPrefixOption = OptionInterfaceOfType<ApiPrefixOptionValue>;
 export type PersonalAccessTokenOption =
   OptionInterfaceOfType<PersonalAccessTokenOptionValue>;
 export type SpaceKeyOption = OptionInterfaceOfType<SpaceKeyOptionValue>;

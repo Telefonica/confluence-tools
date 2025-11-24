@@ -114,10 +114,12 @@ export const CustomConfluenceClient: ConfluenceClientConstructor = class CustomC
           },
         };
 
+    const apiPrefix = config.apiPrefix ?? "/rest/";
+
     this._client = new ConfluenceClient({
       host: config.url,
       authentication,
-      apiPrefix: "/rest/",
+      apiPrefix,
     });
     this._logger = config.logger;
   }
