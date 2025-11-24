@@ -27,6 +27,7 @@ import { InvalidTemplateError } from "./errors/InvalidTemplateError.js";
 import rehypeAddAttachmentsImages from "./support/rehype/rehype-add-attachments-images.js";
 import type { ImagesMetadata } from "./support/rehype/rehype-add-attachments-images.types.js";
 import rehypeAddNotice from "./support/rehype/rehype-add-notice.js";
+import rehypeReplaceCodeBlocks from "./support/rehype/rehype-replace-code-blocks.js";
 import rehypeReplaceDetails from "./support/rehype/rehype-replace-details.js";
 import rehypeReplaceImgTags from "./support/rehype/rehype-replace-img-tags.js";
 import rehypeReplaceInternalReferences from "./support/rehype/rehype-replace-internal-references.js";
@@ -50,6 +51,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
   private readonly _rootPageName?: string;
   private readonly _spaceKey: string;
   private readonly _logger?: LoggerInterface;
+  private readonly _rehypeCodeBlocksEnabled: boolean;
 
   constructor({
     noticeMessage,
@@ -57,6 +59,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     rootPageName,
     spaceKey,
     logger,
+    rehype: { codeBlocks },
   }: ConfluencePageTransformerOptions) {
     this._noticeMessage = noticeMessage;
     this._noticeTemplateRaw = noticeTemplate;
@@ -66,6 +69,11 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     this._rootPageName = rootPageName;
     this._spaceKey = spaceKey;
     this._logger = logger;
+    this._rehypeCodeBlocksEnabled = codeBlocks ?? false;
+
+    logger?.debug(
+      `ConfluencePageTransformer initialized with rehype options: ${JSON.stringify({ codeBlocks: this._rehypeCodeBlocksEnabled })}`,
+    );
   }
 
   public async transform(
@@ -88,7 +96,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
       DEFAULT_MERMAID_DIAGRAMS_LOCATION,
     );
     try {
-      const content = remark()
+      let processor = remark()
         .use(remarkGfm)
         .use(remarkFrontmatter)
         .use(remarkRemoveFootnotes)
@@ -101,7 +109,15 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
         .use(rehypeAddNotice, { noticeMessage })
         .use(rehypeReplaceDetails)
         .use(rehypeReplaceStrikethrough)
-        .use(rehypeReplaceTaskList)
+        .use(rehypeReplaceTaskList);
+
+      // Conditionally add code blocks plugin
+      if (this._rehypeCodeBlocksEnabled) {
+        this._logger?.debug(`Registering rehypeReplaceCodeBlocks plugin`);
+        processor = processor.use(rehypeReplaceCodeBlocks);
+      }
+
+      const content = processor
         .use(rehypeAddAttachmentsImages)
         .use(rehypeReplaceImgTags)
         .use(rehypeReplaceInternalReferences, {

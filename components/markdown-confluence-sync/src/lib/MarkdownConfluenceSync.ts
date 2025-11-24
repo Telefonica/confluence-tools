@@ -41,6 +41,7 @@ import type {
 const MODULE_NAME = "markdown-confluence-sync";
 const MARKDOWN_NAMESPACE = "markdown";
 const CONFLUENCE_NAMESPACE = "confluence";
+const REHYPE_CONFIG_NAMESPACE = "rehype";
 
 const DEFAULT_CONFIG: Configuration["config"] = {
   readArguments: false,
@@ -146,6 +147,9 @@ export const MarkdownConfluenceSync: MarkdownConfluenceSyncConstructor = class M
 
     const confluenceConfig =
       this._configuration.addNamespace(CONFLUENCE_NAMESPACE);
+    const rehypeConfig = this._configuration.addNamespace(
+      REHYPE_CONFIG_NAMESPACE,
+    );
     const confluenceLogger = this._logger.namespace(CONFLUENCE_NAMESPACE);
 
     this._markdownDocuments = new MarkdownDocuments({
@@ -160,6 +164,7 @@ export const MarkdownConfluenceSync: MarkdownConfluenceSyncConstructor = class M
     });
     this._confluenceSync = new ConfluenceSync({
       config: confluenceConfig,
+      rehypeConfig: rehypeConfig,
       logger: confluenceLogger,
       mode: this._modeOption,
     });

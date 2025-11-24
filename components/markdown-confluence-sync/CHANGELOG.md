@@ -15,7 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-- feat(#63): Add apiPrefix option to configure the Confluence API prefix (default: /rest/).
+## [2.3.0] - 2025-11-24
+
+#### Added
+
+* feat(#65): Add code blocks transformation to Confluence code macro format.
+  Code blocks are now converted to Confluence's structured code macro
+  with syntax highlighting support. This feature is disabled by default
+  and can be enabled via `rehype.codeBlocks` configuration option.
+* feat(#63): Add apiPrefix option to configure the Confluence API prefix (default: /rest/).
 
 ## [2.2.0] - 2025-10-17
 

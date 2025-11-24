@@ -33,7 +33,10 @@ describe("confluencePageTransformer", () => {
   let transformer: ConfluencePageTransformerInterface;
 
   beforeEach(() => {
-    transformer = new ConfluencePageTransformer({ spaceKey: "space-key" });
+    transformer = new ConfluencePageTransformer({
+      spaceKey: "space-key",
+      rehype: { codeBlocks: true },
+    });
   });
 
   afterEach(() => {
@@ -324,6 +327,7 @@ describe("confluencePageTransformer", () => {
     const transformerWithRootPageName = new ConfluencePageTransformer({
       rootPageName: "Root",
       spaceKey: "space-key",
+      rehype: { codeBlocks: true },
     });
     const pages = [
       {
@@ -377,6 +381,7 @@ describe("confluencePageTransformer", () => {
       const transformerWithDefaultNoticeMessage = new ConfluencePageTransformer(
         {
           spaceKey: "space-key",
+          rehype: { codeBlocks: true },
         },
       );
 
@@ -413,6 +418,7 @@ describe("confluencePageTransformer", () => {
       const transformerWithNoticeMessage = new ConfluencePageTransformer({
         noticeMessage,
         spaceKey: "space-key",
+        rehype: { codeBlocks: true },
       });
 
       // Act
@@ -446,6 +452,7 @@ describe("confluencePageTransformer", () => {
       const transformerWithNoticeMessage = new ConfluencePageTransformer({
         noticeTemplate: "{{relativePath}",
         spaceKey: "space-key",
+        rehype: { codeBlocks: true },
       });
 
       // Act
@@ -470,6 +477,7 @@ describe("confluencePageTransformer", () => {
       const transformerWithNoticeTemplate = new ConfluencePageTransformer({
         noticeTemplate,
         spaceKey: "space-key",
+        rehype: { codeBlocks: true },
       });
 
       // Act
@@ -506,6 +514,7 @@ describe("confluencePageTransformer", () => {
         noticeTemplate,
         noticeMessage,
         spaceKey: "space-key",
+        rehype: { codeBlocks: true },
       });
 
       // Act
