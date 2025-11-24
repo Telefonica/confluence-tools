@@ -73,6 +73,8 @@ export interface ConfluenceClientConfig {
   authentication?: ConfluenceClientAuthenticationConfig;
   /** Confluence url */
   url: string;
+  /** API Prefix */
+  apiPrefix?: string;
   /** Confluence space id */
   spaceId: string;
   /** Logger */

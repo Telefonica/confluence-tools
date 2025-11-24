@@ -222,6 +222,7 @@ await confluenceSyncPages.sync([
 The main class of the library. It receives a configuration object with the following properties:
 
 * `url`: URL of the Confluence instance.
+* `apiPrefix`: Optional prefix for the Confluence API urls. Default is `/rest/`.
 * `personalAccessToken`: Personal access token to authenticate in Confluence. To be DEPRECATED in future versions. Use the `authentication` property instead.
 * `authentication`: Authentication options to access Confluence. It supports the following methods:
   * `oauth2`: OAuth2 authentication. It requires:

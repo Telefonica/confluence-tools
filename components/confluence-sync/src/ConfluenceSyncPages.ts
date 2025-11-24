@@ -59,6 +59,7 @@ export const ConfluenceSyncPages: ConfluenceSyncPagesConstructor = class Conflue
     dryRun,
     syncMode,
     rootPageId,
+    apiPrefix,
   }: ConfluenceSyncPagesConfig) {
     this._logger = new Logger(LOGGER_NAMESPACE, {
       level: logLevel ?? DEFAULT_LOG_LEVEL,
@@ -70,6 +71,7 @@ export const ConfluenceSyncPages: ConfluenceSyncPagesConstructor = class Conflue
       authentication,
       logger: this._logger.namespace("confluence"),
       dryRun,
+      apiPrefix,
     });
     this._syncMode = syncMode ?? SyncModes.TREE;
 

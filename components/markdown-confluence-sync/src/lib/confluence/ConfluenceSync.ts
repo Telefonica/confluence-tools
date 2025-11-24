@@ -34,6 +34,8 @@ import type {
   NoticeTemplateOption,
   AuthenticationOptionDefinition,
   AuthenticationOption,
+  ApiPrefixOption,
+  ApiPrefixOptionDefinition,
 } from "./ConfluenceSync.types.js";
 import { ConfluencePageTransformer } from "./transformer/ConfluencePageTransformer.js";
 import type { ConfluencePageTransformerInterface } from "./transformer/ConfluencePageTransformer.types.js";
@@ -42,6 +44,12 @@ import { PageIdRequiredException } from "./transformer/errors/PageIdRequiredExce
 const urlOption: UrlOptionDefinition = {
   name: "url",
   type: "string",
+};
+
+const apiPrefixOption: ApiPrefixOptionDefinition = {
+  name: "apiPrefix",
+  type: "string",
+  default: "/rest/",
 };
 
 const personalAccessTokenOption: PersonalAccessTokenOptionDefinition = {
@@ -91,6 +99,7 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   private _confluencePageTransformer: ConfluencePageTransformerInterface;
   private _confluenceSyncPages: ConfluenceSyncPagesInterface;
   private _urlOption: UrlOption;
+  private _apiPrefixOption: ApiPrefixOption;
   private _personalAccessTokenOption: PersonalAccessTokenOption;
   private _spaceKeyOption: SpaceKeyOption;
   private _rootPageIdOption: RootPageIdOption;
@@ -105,6 +114,9 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
 
   constructor({ config, logger, mode }: ConfluenceSyncOptions) {
     this._urlOption = config.addOption(urlOption) as UrlOption;
+    this._apiPrefixOption = config.addOption(
+      apiPrefixOption,
+    ) as ApiPrefixOption;
     this._personalAccessTokenOption = config.addOption(
       personalAccessTokenOption,
     ) as PersonalAccessTokenOption;
@@ -132,6 +144,9 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   public async sync(confluencePages: ConfluenceSyncPage[]): Promise<void> {
     await this._init();
     this._logger.debug(`confluence.url option is ${this._urlOption.value}`);
+    this._logger.debug(
+      `confluence.apiPrefix option is ${this._apiPrefixOption.value}`,
+    );
     this._logger.debug(
       `confluence.spaceKey option is ${this._spaceKeyOption.value}`,
     );
@@ -193,6 +208,7 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
 
       this._confluenceSyncPages = new ConfluenceSyncPages({
         url: this._urlOption.value,
+        apiPrefix: this._apiPrefixOption.value,
         personalAccessToken: this._personalAccessTokenOption.value,
         authentication: this._authenticationOption.value,
         spaceId: this._spaceKeyOption.value,

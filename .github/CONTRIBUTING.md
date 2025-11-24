@@ -64,10 +64,18 @@ pnpm nx test:unit child-process-manager
 To run a task in all components, use the following syntax: `pnpm nx run-many <task> --all`. For example, to run the unit tests in all components, use the following command:
 
 ```bash
-pnpm nx run-many test:unit --all
+pnpm nx run-many -t test:unit --all
 ```
 
 This will run the `test:unit` task in all components and also the corresponding dependencies, in the right order, so everything is built and tested correctly.
+
+## Running all checks in all components
+
+To run all checks in all components, use the following command:
+
+```bash
+pnpm check:all
+```
 
 # Branching model
 

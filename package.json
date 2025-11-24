@@ -11,6 +11,7 @@
     "lint": "eslint *.* --no-warn-ignored",
     "lint:staged": "lint-staged",
     "prepare": "husky install",
+    "check:all": "pnpm nx run-many -t check:all --all",
     "check:spell": "cspell *.* .husky/*.* .github/*.*"
   },
   "devDependencies": {

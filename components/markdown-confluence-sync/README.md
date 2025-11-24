@@ -284,6 +284,7 @@ The namespace for the configuration of this library is `markdown-confluence-sync
 | `filesMetadata` | `array` | Array of objects with the metadata of the files to sync. Each object must have the `path` property with the path of the file. For the rest of properties read the [Configuration per page](#configuration-per-page) section |  |
 | `docsDir` | `string` | Path to the docs directory. | `./docs` |
 | `confluence.url` | `string` | URL of the Confluence instance. | |
+| `confluence.apiPrefix` | `string` | Optional prefix for the Confluence API urls | `/rest/` |
 | `confluence.personalAccessToken` | `string` | Deprecated. Personal access token to authenticate against the Confluence instance. | |
 | `confluence.authentication` | `object` | Object containing authentication options to access the Confluence instance. It supports the same methods [as the `confluence.js` library](https://github.com/MrRefactoring/confluence.js?tab=readme-ov-file#authentication). | |
 | `confluence.authentication.oauth2` | `object` | Object containing OAuth2 authentication options. | |
