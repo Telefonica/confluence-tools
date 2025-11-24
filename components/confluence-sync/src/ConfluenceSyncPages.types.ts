@@ -68,6 +68,8 @@ export interface ConfluenceSyncPagesConfig {
   logLevel?: LogLevel;
   /** Dry run option */
   dryRun?: boolean;
+  /** API Prefix */
+  apiPrefix?: string;
   /** Sync mode */
   syncMode?: SyncModes;
 }
