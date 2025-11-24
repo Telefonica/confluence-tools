@@ -511,12 +511,13 @@ Apart of supporting the most common markdown features, the library also supports
     console.log(hello);
     ```
     ````
-    will be converted to a Confluence code macro as follows (note that the macro is modified to avoid issues when syncing this README itself to Confluence):
+    will be converted to:
     ```markdown
-    <ac: structured-macro ac:name="code">
-      <ac: parameter ac:name="language">javascript</ac: parameter>
-      <ac: plain-text-body><![ CDATA [ const hello = "world";console.log(hello);] ]></ac: plain-text-body>
-    </ac: structured-macro>
+    <ac:structured-macro ac:name="code">
+      <ac:parameter ac:name="language">javascript</ac:parameter>
+      <ac:plain-text-body><![CDATA[const hello = "world";
+    console.log(hello);]]></ac:plain-text-body>
+    </ac:structured-macro>
     ```
 
 ### Unsupported features
