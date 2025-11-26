@@ -123,23 +123,44 @@ function extractAlertInfo(blockquote: HastElement): AlertInfo | undefined {
     return undefined;
   }
 
-  const firstChild = blockquote.children[0];
+  // Find the first non-whitespace child (skip whitespace text nodes)
+  let contentChild = blockquote.children[0];
+  let childIndex = 0;
 
-  // GitHub alerts are rendered as blockquotes with a paragraph as the
-  // first child
-  if (firstChild.type !== "element" || firstChild.tagName !== "p") {
+  while (
+    contentChild &&
+    contentChild.type === "text" &&
+    !(contentChild as HastText).value.trim()
+  ) {
+    childIndex++;
+    if (childIndex >= blockquote.children.length) {
+      return undefined;
+    }
+    contentChild = blockquote.children[childIndex];
+  }
+
+  // Handle two cases: text node directly or paragraph element
+  let textNode: HastText | undefined;
+  let isDirectText = false;
+
+  if (contentChild.type === "text") {
+    // Direct text node with actual content
+    textNode = contentChild as HastText;
+    isDirectText = true;
+  } else if (contentChild.type === "element" && contentChild.tagName === "p") {
+    // Paragraph element
+    const paragraph = contentChild as HastElement;
+    const firstNode = paragraph.children[0];
+    if (firstNode && firstNode.type === "text") {
+      textNode = firstNode as HastText;
+    }
+  }
+
+  if (!textNode) {
     return undefined;
   }
 
-  const paragraph = firstChild as HastElement;
-
-  // Get the text content of the first node in the paragraph
-  const firstNode = paragraph.children[0];
-  if (!firstNode || firstNode.type !== "text") {
-    return undefined;
-  }
-
-  const text = (firstNode as HastText).value;
+  const text = textNode.value;
 
   // Check if it starts with an alert marker
   const alertMatch = text.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/);
@@ -152,34 +173,50 @@ function extractAlertInfo(blockquote: HastElement): AlertInfo | undefined {
   // Remove the alert marker from the text
   const remainingText = text.substring(alertMatch[0].length).trim();
 
-  // Create new paragraph children without the alert marker
-  const newParagraphChildren = [...paragraph.children];
-
-  // If there's remaining text after the marker, update the first text node
-  if (remainingText) {
-    newParagraphChildren[0] = {
-      type: "text",
-      value: remainingText,
-    } as HastText;
-  } else {
-    // Remove the first text node entirely if it only contained the marker
-    newParagraphChildren.shift();
-  }
-
-  // Build the content - include the modified first paragraph and any
-  // remaining children of the blockquote
+  // Build content based on structure
   const content: HastElement["children"] = [];
 
-  // Add the first paragraph with the marker removed
-  if (newParagraphChildren.length > 0) {
-    content.push({
-      ...paragraph,
-      children: newParagraphChildren,
-    });
-  }
+  if (isDirectText) {
+    // For direct text, wrap remaining content in a paragraph
+    if (remainingText) {
+      content.push({
+        type: "element",
+        tagName: "p",
+        properties: {},
+        children: [
+          {
+            type: "text",
+            value: remainingText,
+          } as HastText,
+        ],
+      } as HastElement);
+    }
+    // Add any other children from the blockquote (after the text node we used)
+    content.push(...blockquote.children.slice(childIndex + 1));
+  } else {
+    // For paragraph structure
+    const paragraph = contentChild as HastElement;
+    const newParagraphChildren = [...paragraph.children];
 
-  // Add any additional children from the blockquote
-  content.push(...blockquote.children.slice(1));
+    if (remainingText) {
+      newParagraphChildren[0] = {
+        type: "text",
+        value: remainingText,
+      } as HastText;
+    } else {
+      newParagraphChildren.shift();
+    }
+
+    if (newParagraphChildren.length > 0) {
+      content.push({
+        ...paragraph,
+        children: newParagraphChildren,
+      });
+    }
+
+    // Add any other children from the blockquote (after the paragraph we used)
+    content.push(...blockquote.children.slice(childIndex + 1));
+  }
 
   return {
     type: alertType,
