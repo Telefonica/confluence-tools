@@ -18,6 +18,14 @@ export interface ConfluencePageTransformerRehypeOptions {
    * @default false
    */
   codeBlocks?: boolean;
+  /**
+   * Enable GitHub alerts transformation to Confluence info/note/warning/tip macros.
+   * When enabled, GitHub-flavored markdown alerts (e.g., [!NOTE], [!WARNING])
+   * will be converted to appropriate Confluence macro format.
+   * When this option is not specified or set to false, alerts will remain as blockquotes.
+   * @default false
+   */
+  alerts?: boolean;
 }
 
 export interface ConfluencePageTransformerOptions {

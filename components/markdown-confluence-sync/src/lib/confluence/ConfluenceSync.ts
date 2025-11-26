@@ -36,6 +36,8 @@ import type {
   AuthenticationOption,
   RehypeCodeBlocksOptionDefinition,
   RehypeCodeBlocksOption,
+  RehypeAlertsOptionDefinition,
+  RehypeAlertsOption,
   ApiPrefixOption,
   ApiPrefixOptionDefinition,
 } from "./ConfluenceSync.types.js";
@@ -101,6 +103,12 @@ const rehypeCodeBlocksOption: RehypeCodeBlocksOptionDefinition = {
   default: false,
 };
 
+const rehypeAlertsOption: RehypeAlertsOptionDefinition = {
+  name: "alerts",
+  type: "boolean",
+  default: false,
+};
+
 export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   implements ConfluenceSyncInterface
 {
@@ -120,6 +128,7 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
   private _logger: LoggerInterface;
   private _modeOption: ModeOption;
   private _rehypeCodeBlocksOption: RehypeCodeBlocksOption;
+  private _rehypeAlertsOption: RehypeAlertsOption;
 
   constructor({ config, rehypeConfig, logger, mode }: ConfluenceSyncOptions) {
     this._urlOption = config.addOption(urlOption) as UrlOption;
@@ -150,6 +159,10 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
     this._rehypeCodeBlocksOption = rehypeConfig.addOption(
       rehypeCodeBlocksOption,
     ) as RehypeCodeBlocksOption;
+
+    this._rehypeAlertsOption = rehypeConfig.addOption(
+      rehypeAlertsOption,
+    ) as RehypeAlertsOption;
 
     this._modeOption = mode;
     this._logger = logger;
@@ -220,6 +233,7 @@ export const ConfluenceSync: ConfluenceSyncConstructor = class ConfluenceSync
         logger: this._logger.namespace("transformer"),
         rehype: {
           codeBlocks: this._rehypeCodeBlocksOption.value,
+          alerts: this._rehypeAlertsOption.value,
         },
       });
 
