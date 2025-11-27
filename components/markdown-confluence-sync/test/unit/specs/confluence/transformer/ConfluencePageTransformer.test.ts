@@ -35,7 +35,7 @@ describe("confluencePageTransformer", () => {
   beforeEach(() => {
     transformer = new ConfluencePageTransformer({
       spaceKey: "space-key",
-      rehype: { codeBlocks: true },
+      rehype: { codeBlocks: true, githubAlerts: true },
     });
   });
 
@@ -730,6 +730,86 @@ describe("confluencePageTransformer", () => {
           attachments: {},
         },
       ]);
+    });
+  });
+
+  describe("github alerts", () => {
+    it("should transform GitHub alerts when githubAlerts option is true", async () => {
+      // Arrange
+      const transformerWithAlerts = new ConfluencePageTransformer({
+        spaceKey: "space-key",
+        rehype: { githubAlerts: true },
+      });
+
+      const pages = [
+        {
+          title: "Page 1",
+          path: join(__dirname, "./page-1.md"),
+          relativePath: "./page-1.md",
+          content: dedent`
+            > [!NOTE]
+            > This is a note
+          `,
+          ancestors: [],
+        },
+      ];
+
+      // Act
+      const transformedPages = await transformerWithAlerts.transform(pages);
+
+      // Assert
+      expect(transformedPages).toEqual([
+        {
+          title: "Page 1",
+          ancestors: [],
+          content: expect.stringContaining(
+            '<ac:structured-macro ac:name="info">',
+          ),
+          attachments: {},
+        },
+      ]);
+      expect(transformedPages[0].content).toContain(
+        '<ac:parameter ac:name="title">Note',
+      );
+      expect(transformedPages[0].content).toContain("This is a note");
+    });
+
+    it("should not transform GitHub alerts when githubAlerts option is false", async () => {
+      // Arrange
+      const transformerWithoutAlerts = new ConfluencePageTransformer({
+        spaceKey: "space-key",
+        rehype: { githubAlerts: false },
+      });
+
+      const pages = [
+        {
+          title: "Page 1",
+          path: join(__dirname, "./page-1.md"),
+          relativePath: "./page-1.md",
+          content: dedent`
+            > [!NOTE]
+            > This is a note
+          `,
+          ancestors: [],
+        },
+      ];
+
+      // Act
+      const transformedPages = await transformerWithoutAlerts.transform(pages);
+
+      // Assert
+      expect(transformedPages).toEqual([
+        {
+          title: "Page 1",
+          ancestors: [],
+          content: expect.stringContaining("<blockquote>"),
+          attachments: {},
+        },
+      ]);
+      expect(transformedPages[0].content).not.toContain(
+        '<ac:structured-macro ac:name="info">',
+      );
+      expect(transformedPages[0].content).toContain("[!NOTE]");
     });
   });
 });

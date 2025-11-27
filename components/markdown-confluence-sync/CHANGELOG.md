@@ -11,9 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Deprecated
 #### Removed
 
-## Unreleased
+## [2.4.0] - 2025-11-27
 
 #### Added
+
+* feat(#70): Add GitHub alerts transformation to Confluence macros.
+  GitHub-flavored markdown alerts ([!NOTE], [!TIP], [!IMPORTANT],
+  [!WARNING], [!CAUTION]) are now converted to Confluence's native
+  info, note, warning, and tip macros. This feature is disabled by
+  default and can be enabled via `rehype.alerts` configuration option.
 
 ## [2.3.0] - 2025-11-24
 

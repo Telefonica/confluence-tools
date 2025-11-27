@@ -27,6 +27,7 @@ import { InvalidTemplateError } from "./errors/InvalidTemplateError.js";
 import rehypeAddAttachmentsImages from "./support/rehype/rehype-add-attachments-images.js";
 import type { ImagesMetadata } from "./support/rehype/rehype-add-attachments-images.types.js";
 import rehypeAddNotice from "./support/rehype/rehype-add-notice.js";
+import rehypeReplaceGithubAlerts from "./support/rehype/rehype-replace-github-alerts.js";
 import rehypeReplaceCodeBlocks from "./support/rehype/rehype-replace-code-blocks.js";
 import rehypeReplaceDetails from "./support/rehype/rehype-replace-details.js";
 import rehypeReplaceImgTags from "./support/rehype/rehype-replace-img-tags.js";
@@ -52,6 +53,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
   private readonly _spaceKey: string;
   private readonly _logger?: LoggerInterface;
   private readonly _rehypeCodeBlocksEnabled: boolean;
+  private readonly _rehypeGithubAlertsEnabled: boolean;
 
   constructor({
     noticeMessage,
@@ -59,7 +61,7 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     rootPageName,
     spaceKey,
     logger,
-    rehype: { codeBlocks },
+    rehype: { codeBlocks, githubAlerts },
   }: ConfluencePageTransformerOptions) {
     this._noticeMessage = noticeMessage;
     this._noticeTemplateRaw = noticeTemplate;
@@ -70,9 +72,10 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
     this._spaceKey = spaceKey;
     this._logger = logger;
     this._rehypeCodeBlocksEnabled = codeBlocks ?? false;
+    this._rehypeGithubAlertsEnabled = githubAlerts ?? false;
 
     logger?.debug(
-      `ConfluencePageTransformer initialized with rehype options: ${JSON.stringify({ codeBlocks: this._rehypeCodeBlocksEnabled })}`,
+      `ConfluencePageTransformer initialized with rehype options: ${JSON.stringify({ codeBlocks: this._rehypeCodeBlocksEnabled, alerts: this._rehypeGithubAlertsEnabled })}`,
     );
   }
 
@@ -115,6 +118,12 @@ export const ConfluencePageTransformer: ConfluencePageTransformerConstructor = c
       if (this._rehypeCodeBlocksEnabled) {
         this._logger?.debug(`Registering rehypeReplaceCodeBlocks plugin`);
         processor = processor.use(rehypeReplaceCodeBlocks);
+      }
+
+      // Conditionally add alerts plugin
+      if (this._rehypeGithubAlertsEnabled) {
+        this._logger?.debug(`Registering rehypeReplaceAlerts plugin`);
+        processor = processor.use(rehypeReplaceGithubAlerts);
       }
 
       const content = processor

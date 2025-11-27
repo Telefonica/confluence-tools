@@ -43,5 +43,6 @@ module.exports = {
   logLevel: "debug",
   rehype: {
     codeBlocks: true,
+    githubAlerts: true,
   },
 };
