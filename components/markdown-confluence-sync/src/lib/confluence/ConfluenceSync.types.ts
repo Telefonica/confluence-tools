@@ -25,6 +25,7 @@ type NoticeTemplateOptionValue = string;
 type DryRunOptionValue = boolean;
 
 type RehypeCodeBlocksOptionValue = boolean;
+type RehypeAlertsOptionValue = boolean;
 
 declare global {
   //eslint-disable-next-line @typescript-eslint/no-namespace
@@ -58,6 +59,8 @@ declare global {
       rehype?: {
         /** Enable code blocks transformation to Confluence code macro */
         codeBlocks?: RehypeCodeBlocksOptionValue;
+        /** Enable GitHub alerts transformation to Confluence info/note/warning/tip macros */
+        alerts?: RehypeAlertsOptionValue;
       };
     }
   }
@@ -82,6 +85,8 @@ export type DryRunOptionDefinition = OptionDefinition<
 >;
 export type RehypeCodeBlocksOptionDefinition =
   OptionDefinition<RehypeCodeBlocksOptionValue>;
+export type RehypeAlertsOptionDefinition =
+  OptionDefinition<RehypeAlertsOptionValue>;
 
 export type AuthenticationOptionDefinition =
   OptionDefinition<ConfluenceClientAuthenticationConfig>;
@@ -106,6 +111,11 @@ export type DryRunOption = OptionInterfaceOfType<
 
 export type RehypeCodeBlocksOption = OptionInterfaceOfType<
   RehypeCodeBlocksOptionValue,
+  { hasDefault: true }
+>;
+
+export type RehypeAlertsOption = OptionInterfaceOfType<
+  RehypeAlertsOptionValue,
   { hasDefault: true }
 >;
 
