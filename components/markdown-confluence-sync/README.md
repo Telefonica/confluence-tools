@@ -530,7 +530,7 @@ Apart of supporting the most common markdown features, the library also supports
   * Alert content including formatted text, code, and lists is
     preserved in the conversion.
   * This feature is disabled by default for backward compatibility.
-    Enable it by setting `rehype.alerts: true`.
+    Enable it by setting `rehype.githubAlerts: true`.
   * For example, the following markdown alert:
     ```markdown
     > [!NOTE]
