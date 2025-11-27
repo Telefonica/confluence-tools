@@ -9,12 +9,12 @@ import { replace } from "../../../../support/unist/unist-util-replace.js";
 /**
  * Alert type mapping for GitHub-flavored markdown alerts
  */
-type AlertType = "NOTE" | "TIP" | "IMPORTANT" | "WARNING" | "CAUTION";
+type GithubAlertType = "NOTE" | "TIP" | "IMPORTANT" | "WARNING" | "CAUTION";
 
 /**
  * Confluence macro names for different alert types
  */
-const ALERT_TO_MACRO: Record<AlertType, string> = {
+const ALERT_TO_MACRO: Record<GithubAlertType, string> = {
   NOTE: "info",
   TIP: "tip",
   IMPORTANT: "note",
@@ -25,7 +25,7 @@ const ALERT_TO_MACRO: Record<AlertType, string> = {
 /**
  * Default titles for alert types
  */
-const ALERT_TITLES: Record<AlertType, string> = {
+const ALERT_TITLES: Record<GithubAlertType, string> = {
   NOTE: "Note",
   TIP: "Tip",
   IMPORTANT: "Important",
@@ -52,8 +52,8 @@ const ALERT_TITLES: Record<AlertType, string> = {
  *    </ac:rich-text-body>
  *  </ac:structured-macro>
  */
-const rehypeReplaceAlerts: UnifiedPlugin<[], Root> =
-  function rehypeReplaceAlerts() {
+const rehypeReplaceGithubAlerts: UnifiedPlugin<[], Root> =
+  function rehypeReplaceGithubAlerts() {
     return function transformer(tree) {
       replace(tree, { type: "element", tagName: "blockquote" }, (node) => {
         // Check if this blockquote is a GitHub alert
@@ -107,7 +107,7 @@ const rehypeReplaceAlerts: UnifiedPlugin<[], Root> =
  * Interface for alert information extracted from a blockquote
  */
 interface AlertInfo {
-  type: AlertType;
+  type: GithubAlertType;
   content: HastElement["children"];
 }
 
@@ -134,6 +134,7 @@ function extractAlertInfo(blockquote: HastElement): AlertInfo | undefined {
   ) {
     childIndex++;
     if (childIndex >= blockquote.children.length) {
+      // istanbul ignore next - Defensive check, should not happen
       return undefined;
     }
     contentChild = blockquote.children[childIndex];
@@ -157,6 +158,7 @@ function extractAlertInfo(blockquote: HastElement): AlertInfo | undefined {
   }
 
   if (!textNode) {
+    // istanbul ignore next - Defensive check, should not happen
     return undefined;
   }
 
@@ -168,7 +170,7 @@ function extractAlertInfo(blockquote: HastElement): AlertInfo | undefined {
     return undefined;
   }
 
-  const alertType = alertMatch[1] as AlertType;
+  const alertType = alertMatch[1] as GithubAlertType;
 
   // Remove the alert marker from the text
   const remainingText = text.substring(alertMatch[0].length).trim();
@@ -224,4 +226,4 @@ function extractAlertInfo(blockquote: HastElement): AlertInfo | undefined {
   };
 }
 
-export default rehypeReplaceAlerts;
+export default rehypeReplaceGithubAlerts;

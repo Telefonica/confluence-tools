@@ -25,7 +25,7 @@ export interface ConfluencePageTransformerRehypeOptions {
    * When this option is not specified or set to false, alerts will remain as blockquotes.
    * @default false
    */
-  alerts?: boolean;
+  githubAlerts?: boolean;
 }
 
 export interface ConfluencePageTransformerOptions {

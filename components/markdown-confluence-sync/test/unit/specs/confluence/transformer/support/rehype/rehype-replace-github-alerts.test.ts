@@ -6,9 +6,9 @@ import rehypeRaw from "rehype-raw";
 import rehypeStringify from "rehype-stringify";
 import { unified } from "unified";
 
-import rehypeReplaceAlerts from "@src/lib/confluence/transformer/support/rehype/rehype-replace-alerts";
+import rehypeReplaceAlerts from "@src/lib/confluence/transformer/support/rehype/rehype-replace-github-alerts";
 
-describe("rehype-replace-alerts", () => {
+describe("rehype-replace-github-alerts", () => {
   it("should be defined", () => {
     expect(rehypeReplaceAlerts).toBeDefined();
   });
@@ -452,5 +452,53 @@ Then a warning</p>
     // Assert
     expect(result).toContain('<ac:structured-macro ac:name="info">');
     expect(result).toContain("Immediate text");
+  });
+
+  it("should handle direct text node with remaining text after alert marker", () => {
+    // Arrange
+    const html = `<blockquote>[!WARNING] Direct text with remaining content</blockquote>`;
+
+    // Act
+    const result = unified()
+      .use(rehypeParse)
+      .use(rehypeRaw)
+      .use(rehypeReplaceAlerts)
+      .use(rehypeStringify, {
+        allowDangerousHtml: true,
+        closeSelfClosing: true,
+        tightSelfClosing: true,
+      })
+      .processSync(html)
+      .toString();
+
+    // Assert
+    expect(result).toContain('<ac:structured-macro ac:name="warning">');
+    expect(result).toContain('<ac:parameter ac:name="title">Warning');
+    expect(result).toContain("<ac:rich-text-body>");
+    expect(result).toContain("<p>Direct text with remaining content</p>");
+  });
+
+  it("should handle direct text node without remaining text after alert marker", () => {
+    // Arrange
+    const html = `<blockquote>[!TIP]</blockquote>`;
+
+    // Act
+    const result = unified()
+      .use(rehypeParse)
+      .use(rehypeRaw)
+      .use(rehypeReplaceAlerts)
+      .use(rehypeStringify, {
+        allowDangerousHtml: true,
+        closeSelfClosing: true,
+        tightSelfClosing: true,
+      })
+      .processSync(html)
+      .toString();
+
+    // Assert
+    expect(result).toContain('<ac:structured-macro ac:name="tip">');
+    expect(result).toContain('<ac:parameter ac:name="title">Tip');
+    expect(result).toContain("<ac:rich-text-body>");
+    expect(result).not.toContain("<p></p>");
   });
 });

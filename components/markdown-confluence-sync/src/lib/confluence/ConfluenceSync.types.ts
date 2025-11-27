@@ -25,7 +25,7 @@ type NoticeTemplateOptionValue = string;
 type DryRunOptionValue = boolean;
 
 type RehypeCodeBlocksOptionValue = boolean;
-type RehypeAlertsOptionValue = boolean;
+type RehypeGithubAlertsOptionValue = boolean;
 
 declare global {
   //eslint-disable-next-line @typescript-eslint/no-namespace
@@ -60,7 +60,7 @@ declare global {
         /** Enable code blocks transformation to Confluence code macro */
         codeBlocks?: RehypeCodeBlocksOptionValue;
         /** Enable GitHub alerts transformation to Confluence info/note/warning/tip macros */
-        alerts?: RehypeAlertsOptionValue;
+        githubAlerts?: RehypeGithubAlertsOptionValue;
       };
     }
   }
@@ -85,8 +85,8 @@ export type DryRunOptionDefinition = OptionDefinition<
 >;
 export type RehypeCodeBlocksOptionDefinition =
   OptionDefinition<RehypeCodeBlocksOptionValue>;
-export type RehypeAlertsOptionDefinition =
-  OptionDefinition<RehypeAlertsOptionValue>;
+export type RehypeGithubAlertsOptionDefinition =
+  OptionDefinition<RehypeGithubAlertsOptionValue>;
 
 export type AuthenticationOptionDefinition =
   OptionDefinition<ConfluenceClientAuthenticationConfig>;
@@ -114,8 +114,8 @@ export type RehypeCodeBlocksOption = OptionInterfaceOfType<
   { hasDefault: true }
 >;
 
-export type RehypeAlertsOption = OptionInterfaceOfType<
-  RehypeAlertsOptionValue,
+export type RehypeGithubAlertsOption = OptionInterfaceOfType<
+  RehypeGithubAlertsOptionValue,
   { hasDefault: true }
 >;
 

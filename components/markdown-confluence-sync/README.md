@@ -303,7 +303,7 @@ The namespace for the configuration of this library is `markdown-confluence-sync
 | `confluence.noticeTemplate` | `string` | Template string to use for the notice message. | |
 | `confluence.dryRun` | `boolean` | Log create, update or delete requests to Confluence instead of really making them | `false` |
 | `rehype.codeBlocks` | `boolean` | Enable conversion of code blocks to Confluence code macro format with syntax highlighting. When disabled, code blocks remain as plain HTML pre/code tags. | `false` |
-| `rehype.alerts` | `boolean` | Enable conversion of GitHub alerts ([!NOTE], [!TIP], [!IMPORTANT], [!WARNING], [!CAUTION]) to Confluence info/note/warning/tip macros. When disabled, alerts remain as blockquotes. | `false` |
+| `rehype.githubAlerts` | `boolean` | Enable conversion of GitHub alerts ([!NOTE], [!TIP], [!IMPORTANT], [!WARNING], [!CAUTION]) to Confluence info/note/warning/tip macros. When disabled, github alerts remain as blockquotes. | `false` |
 | `dryRun` | `boolean` | Process markdown files without sending them to `confluence-sync`. Useful to early detection of possible errors in configuration, etc. Note that, requests that would be made to Confluence won't be logged, use `confluence.dryRun` for that, which also connects to Confluence to calculate the requests to do | `false` |
 | `config.readArguments` | `boolean` | Read configuration from arguments or not | `false` |
 | `config.readFile` | `boolean` | Read configuration from file or not | `false` |
@@ -496,7 +496,7 @@ Apart of supporting the most common markdown features, the library also supports
       <ac:rich-text-body><p>This is the content of the details.</p></ac:rich-text-body>
     </ac:structured-macro>
     ```
-* Code blocks - Markdown fenced code blocks can be converted to
+* [Code blocks](https://www.markdownguide.org/extended-syntax/#fenced-code-blocks) - Markdown fenced code blocks can be converted to
   Confluence code macro format with syntax highlighting support. This
   feature is disabled by default but can be enabled via the
   `rehype.codeBlocks` configuration option.
@@ -520,7 +520,7 @@ Apart of supporting the most common markdown features, the library also supports
       <ac:plain-text-body><![ CDATA [ const hello = "world";console.log(hello);] ]></ac:plain-text-body>
     </ac:structured-macro>
     ```
-* GitHub Alerts - GitHub-flavored markdown alerts can be converted to
+* [GitHub Alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) - GitHub-flavored markdown alerts can be converted to
   Confluence's native info, note, warning, and tip macros. This feature
   is disabled by default but can be enabled via the `rehype.alerts`
   configuration option.
