@@ -522,7 +522,7 @@ Apart of supporting the most common markdown features, the library also supports
     ```
 * [GitHub Alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) - GitHub-flavored markdown alerts can be converted to
   Confluence's native info, note, warning, and tip macros. This feature
-  is disabled by default but can be enabled via the `rehype.alerts`
+  is disabled by default but can be enabled via the `rehype.githubAlerts`
   configuration option.
   * The plugin converts GitHub alert syntax (`[!NOTE]`, `[!TIP]`,
     `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`) to appropriate
